@@ -15,6 +15,7 @@ router.get("/", allProducts);
 // Crear producto
 router.post("/", createProduct);
 
+
 // Obtener producto
 router.get("/:id", getProduct);
 

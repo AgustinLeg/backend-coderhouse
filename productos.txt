@@ -1,1 +1,20 @@
-[{"title":"Escuadra","price":123.45,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/ruler-triangle-stationary-school-256.png","id":"$12$TqvMTr.oiCGhaTt3BBA47OKYIsxCdWtN7MFmnDpZ8wn9OOoov5vRe"},{"title":"Calculadora","price":234.56,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png","id":"$2a$12$wSAI1qYOFZTzaHx/dLxy9O3BRYYA14wWY/fwapwMDOxSv3vCZ9KJ6"},{"title":"Globo Terráqueo","price":345.67,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/globe-earth-geograhy-planet-school-256.png","id":"$2a$12$QjV8d48HI4jBWbEhIyPTkuhuC.xJtldpyhPhlQa2O4ApYL/etayBW"},{"title":"Silla","price":3412.67,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/globe-earth-geograhy-planet-school-256.png","id":"$2a$12$QjV8d483333HI4jBWbEhIyPTkuhuC./etayBW"}]
+[
+    {
+        "id": 1,
+        "title": "Television",
+        "price": "2000",
+        "thumbnail": "https://http2.mlstatic.com/D_Q_NP_2X_839733-MLA44230684413_122020-AB.webp"
+    },
+    {
+        "id": 2,
+        "title": "Auto",
+        "price": "5000000",
+        "thumbnail": "https://http2.mlstatic.com/D_NQ_NP_893802-MLA48914442831_012022-W.webp"
+    },
+    {
+        "id": 3,
+        "title": "carton",
+        "price": "500",
+        "thumbnail": "https://lh6.googleusercontent.com/YW5e9XHiGJzYRZITTqgnqIbM4geDX_L2nOyCTm3LlezSPYF7sqXPMxOZuMf8o_B7gtSwwEov6vdjryfqMR3KuswHz9CI9wgMnjIuhEOdxT0uaVNCOQzuBS68xeNw820dQU_Po_X_"
+    }
+]

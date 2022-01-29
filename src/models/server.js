@@ -5,8 +5,18 @@ class Server {
     this.app = express();
     this.port = process.env.PORT;
     this.pathProducts = "/api/productos";
+    
+    this.middlewares();
 
     this.routes();
+
+  }
+
+  middlewares() {
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: false }));
+
+    this.app.use(express.static("public"));
   }
 
   routes() {
