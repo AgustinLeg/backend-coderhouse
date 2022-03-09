@@ -28,7 +28,6 @@ const getRandom = (req, res) => {
 
 const getById = (req, res) => {
   const id = req.params.id;
-  console.log(id);
   fs.readFile(pathFile, "utf8", (err, data) => {
     if (err) {
       console.error(err);
@@ -60,7 +59,7 @@ const newProduct = (req, res) => {
       ? Number(products[products.length - 1].id) + 1
       : 1;
     const newProduct = {
-      id: id || Math.random(),
+      id: id.toString(),
       title,
       price,
       thumbnail,
@@ -78,7 +77,7 @@ const newProduct = (req, res) => {
 
 const updateProduct = (req, res) => {
   const { title, price, thumbnail } = req.body;
-  const id = Number(req.params.id);
+  const id = req.params.id;
   if (!title.length || !price.length || !thumbnail.length) {
     return res.status(406).send({ error: "Faltan datos", status: 406 });
   }
@@ -105,7 +104,7 @@ const updateProduct = (req, res) => {
 };
 
 const removeProduct = (req, res) => {
-  const id = Number(req.params.id);
+  const id = req.params.id;
   fs.readFile(pathFile, "utf8", (err, data) => {
     if (err) {
       console.error(err);
@@ -113,6 +112,12 @@ const removeProduct = (req, res) => {
     }
     const products = JSON.parse(data);
     const removedProduct = products.find((product) => product.id === id);
+
+    if (!removedProduct) {
+      return res
+        .status(404)
+        .send({ error: `No encontramos el producto con el ID: ${id}` });
+    }
 
     const newProducts = products.filter((product) => product.id !== id);
 
