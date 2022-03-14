@@ -45,7 +45,7 @@ const getById = (req, res) => {
 
 const newProduct = (req, res) => {
   const { title, price, thumbnail } = req.body;
-  if (!title.length || !price.length || !thumbnail.length) {
+  if (!title || !price || !thumbnail) {
     return res.status(406).send({ error: "Faltan datos", status: 406 });
   }
 
@@ -68,10 +68,7 @@ const newProduct = (req, res) => {
     products.push(newProduct);
 
     fs.writeFileSync(pathFile, JSON.stringify(products), "utf8");
-
-    res.json({
-      newProduct,
-    });
+    res.redirect('/productos');
   });
 };
 
