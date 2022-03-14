@@ -1,0 +1,43 @@
+html(lang="en")
+  head
+    title= abc
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css', integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3", crossorigin="anonymous")
+    script(type='text/javascript').
+      if (foo) bar(1 + 5)
+  body
+    header(class="row")
+      nav(class="navbar navbar-expand-lg navbar-light bg-light")
+        .container-fluid
+          h1 Handlebars
+          button(
+            class="navbar-toggler",
+            type="button",
+            data-bs-toggle="collapse",
+            data-bs-target="#navbarNav",
+            aria-controls="navbarNav",
+            aria-expanded="false",
+            aria-label="Toggle navigation")
+            span(class="navbar-toggler-icon")
+          .collapse.navbar-collapse
+            ul(class="nav justify-content-center")
+              li(class="nav-item")
+                a(class="nav-link" href="/") Formulario
+              li(class="nav-item")
+                a(class="nav-link" href="/productos") Productos
+    .row.d-flex.justify-content-center
+      .col-12.col-md-6
+        .card.mt-5
+          .card-header
+            h2 .Agregar un producto
+          .card-body
+        form(action="/api/productos",method="POST",enctype="application/x-www-form-urlencoded")
+          .form-floating.mb-3
+            input(type="text", class="form-control" ,name="title" )
+            label(for="floatingInput") Nombre
+          .form-floating.mb-3
+            input(type="text", class="form-control" ,name="price" )
+            label(for="floatingInput") Price
+          .form-floating.mb-3
+            input(type="text", class="form-control" ,name="thumbnail" )
+            label(for="floatingInput") Thumbnail URL
+          button(type="submit",class="btn btn-primary w-100") Crear

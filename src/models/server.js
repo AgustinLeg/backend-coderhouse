@@ -1,5 +1,4 @@
 const express = require("express");
-const { engine } = require("express-handlebars");
 
 const path = require("path");
 
@@ -25,9 +24,6 @@ class Server {
     this.app.use(express.urlencoded({ extended: false }));
 
     this.app.use(express.static("public"));
-
-    this.app.set("views", path.resolve("./src/views"));
-    this.app.set("view engine", "hbs");
   }
 
   routes() {
@@ -48,15 +44,8 @@ class Server {
   }
 
   engine() {
-    this.app.engine(
-      "hbs",
-      engine({
-        extname: ".hbs",
-        defaultLayout: "index.hbs",
-        layoutsDir: path.resolve("./src/views/layouts"),
-        partialsDir: path.resolve("./src/views/partials/"),
-      })
-    );
+    this.app.set("views", path.resolve("./src/views"));
+    this.app.set("view engine", "pug");
   }
 
   listen() {
