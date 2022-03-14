@@ -1,0 +1,39 @@
+<html lang="en">
+  <head>
+    <%- include('./partials/head'); %>
+  </head>
+
+  <body>
+    <header class="row"><%- include('./partials/header'); %></header>
+    <div class="row d-flex justify-content-center">
+      <div class="col-12 col-md-6">
+        <div class="card mt-5">
+          <div class="card-header">
+            <h2>Agregar un producto</h2>
+          </div>
+          <div class="card-body">
+            <form
+              action="/api/productos"
+              method="POST"
+              enctype="application/x-www-form-urlencoded"
+            >
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="title" />
+                <label for="floatingInput">Nombre</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="price" />
+                <label for="floatingInput">Precio</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="thumbnail" />
+                <label for="floatingInput">Foto url</label>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Crear</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

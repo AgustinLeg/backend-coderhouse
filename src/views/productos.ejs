@@ -1,0 +1,43 @@
+<html lang="en">
+  <head>
+    <%- include('./partials/head'); %>
+  </head>
+
+  <body>
+    <header class="row"><%- include('./partials/header'); %></header>
+    <h2>Productos</h2>
+    <% if(data){ %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Price</th>
+            <th scope="col">Thumbnail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.forEach(function(value) { %>
+            <tr>
+              <th scope="row"><%= value.id %></th>
+              <td><%= value.title %></td>
+              <td>$<%= value.price %></td>
+              <td>
+                <img
+                  src=<%= value.thumbnail %>
+                  alt="imagen de {{ this.title }}"
+                  width="50"
+                />
+              </td>
+            </tr>
+        <% }); %>
+        </tbody>
+      </table>
+    <% } else{ %>  
+      <div class="alert alert-warning" role="alert">
+        No se encontraron productos
+      </div>
+      <a href="/" class="btn btn-primary" role="button">Crear producto</a>
+   <% } %>
+  </body>
+</html>
