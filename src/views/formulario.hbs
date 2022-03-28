@@ -5,27 +5,27 @@
         <h2>Agregar un producto</h2>
       </div>
       <div class="card-body">
-        <form
-          action="/api/productos"
-          method="POST"
-          enctype="application/x-www-form-urlencoded"
-        >
+        <form id="product-form">
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" name="title" />
+            <input type="text" class="form-control" name="title" id="title"/>
             <label for="floatingInput">Nombre</label>
           </div>
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" name="price" />
+            <input type="text" class="form-control" name="price" id="price"/>
             <label for="floatingInput">Precio</label>
           </div>
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" name="thumbnail" />
+            <input type="text" class="form-control" name="thumbnail" id="thumbnail"/>
             <label for="floatingInput">Foto url</label>
+          </div>
+          <div class="" role="alert" id="error-product">
           </div>
           <button type="submit" class="btn btn-primary w-100">Crear</button>
         </form>
-
       </div>
     </div>
   </div>
 </div>
+
+{{>products-table}}
+{{>chat}}

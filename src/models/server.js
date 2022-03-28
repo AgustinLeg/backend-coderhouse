@@ -1,5 +1,8 @@
 const express = require("express");
 const { engine } = require("express-handlebars");
+const { Server: HttpServer } = require("http");
+const { Server: IOServer } = require("socket.io");
+const Sockets = require("./sockets");
 
 const path = require("path");
 
@@ -18,20 +21,28 @@ class Server {
     this.middlewares();
 
     this.routes();
+
+    // Http server
+    this.server = new HttpServer(this.app);
+
+    // Configuraciones de sockets
+    this.io = new IOServer(this.server);
+
+    this.initSocket();
   }
 
   middlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
 
-    this.app.use(express.static("public"));
+    this.app.use(express.static("./public"));
 
     this.app.set("views", path.resolve("./src/views"));
     this.app.set("view engine", "hbs");
   }
 
   routes() {
-    this.app.use(this.pathProducts, require("../routes/products"));
+    this.app.use(this.pathProducts, require("../routes/ProductsRouter"));
     this.app.get("/productos", (req, res) => {
       fs.readFile(pathFile, "utf8", (err, data) => {
         if (err) {
@@ -59,8 +70,12 @@ class Server {
     );
   }
 
+  initSocket() {
+    new Sockets(this.io);
+  }
+
   listen() {
-    this.app.listen(this.port, () => {
+    this.server.listen(this.port, () => {
       console.log(`🚀 Server started on http://localhost:${this.port}`);
     });
   }
