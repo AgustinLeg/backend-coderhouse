@@ -1,14 +1,7 @@
 const express = require("express");
 const { engine } = require("express-handlebars");
-const { Server: HttpServer } = require("http");
-const { Server: IOServer } = require("socket.io");
-const Sockets = require("./sockets");
 
 const path = require("path");
-
-const fs = require("fs");
-
-const pathFile = "./productos.txt";
 
 class Server {
   constructor() {
@@ -21,14 +14,6 @@ class Server {
     this.middlewares();
 
     this.routes();
-
-    // Http server
-    this.server = new HttpServer(this.app);
-
-    // Configuraciones de sockets
-    this.io = new IOServer(this.server);
-
-    this.initSocket();
   }
 
   middlewares() {
@@ -43,16 +28,7 @@ class Server {
 
   routes() {
     this.app.use(this.pathProducts, require("../routes/ProductsRouter"));
-    this.app.get("/productos", (req, res) => {
-      fs.readFile(pathFile, "utf8", (err, data) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        const dataParsed = JSON.parse(data);
-        res.render("productos", { data: dataParsed });
-      });
-    });
+
     this.app.get("/", (req, res) => {
       res.render("formulario");
     });
@@ -68,10 +44,6 @@ class Server {
         partialsDir: path.resolve("./src/views/partials/"),
       })
     );
-  }
-
-  initSocket() {
-    new Sockets(this.io);
   }
 
   listen() {
