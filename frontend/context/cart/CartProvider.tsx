@@ -59,7 +59,7 @@ export const CartProvider: FC = ({ children }) => {
         p.quantity += product.quantity;
         return p;
     });
-
+    
     dispatch({ type: '[Cart] - Update products in cart', payload: updatedProducts });
 
 }

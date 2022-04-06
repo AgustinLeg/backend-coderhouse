@@ -1,5 +1,3 @@
-import Router, { useRouter } from "next/router";
-import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Button,
   Flex,
@@ -9,20 +7,20 @@ import {
   Input,
   Stack,
   useColorModeValue,
-  HStack,
-  Avatar,
-  AvatarBadge,
-  IconButton,
   Center,
   Image,
 } from "@chakra-ui/react";
 import { IProduct } from "../../../interfaces";
 import { useProducts } from "../../../hooks";
+import { ChangeEvent, useEffect, useState, useContext } from "react";
+import { useRouter } from "next/router";
+import { AuthContext } from "../../../context";
 const Producto = () => {
   const {
     push,
     query: { slug },
   } = useRouter();
+  const {user} = useContext(AuthContext);
   const { products } = useProducts(`/productos/${slug}`) as {
     products: IProduct;
     isLoading: boolean;
@@ -47,6 +45,7 @@ const Producto = () => {
   const handleDelete = async (id: string) => {
     await fetch(`http://localhost:8080/api/productos/${id}`, {
       method: "DELETE",
+      body: JSON.stringify({ role: user!.role }),
     });
 
     push("/admin/productos");
@@ -62,10 +61,13 @@ const Producto = () => {
       method: "PUT", // *GET, POST, PUT, DELETE, etc.
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify(values), // body data type must match "Content-Type" header
+      body: JSON.stringify({...values, role: user!.role}), 
     });
+    if(!response.ok){
+      alert(response.statusText);
+      return
+    }
     alert("Producto actualizado");
     push('/admin/productos');
   };
@@ -121,7 +123,7 @@ const Producto = () => {
           <Input
             placeholder="50"
             _placeholder={{ color: "gray.500" }}
-            type="text"
+            type="number"
             name="price"
             value={values.price}
             onChange={handleChange}

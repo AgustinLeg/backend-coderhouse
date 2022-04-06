@@ -19,8 +19,8 @@ import { useRouter } from "next/router";
 export default function Login() {
   const { loginUser } = useContext(AuthContext);
   const [values, setValues] = useState({
-    email: "",
-    password: "",
+    email: "admin@gmail.com",
+    password: "123456",
   });
   const router = useRouter()
 
@@ -64,13 +64,14 @@ export default function Login() {
             <Stack spacing={4}>
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>
-                <Input type="email" name="email" onChange={handleChange} />
+                <Input type="email" name="email" value={values.email} onChange={handleChange} />
               </FormControl>
               <FormControl id="password">
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"
                   name="password"
+                  value={values.password}
                   onChange={handleChange}
                 />
               </FormControl>

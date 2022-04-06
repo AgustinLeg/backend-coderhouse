@@ -30,11 +30,13 @@ const Productos = () => {
       return;
     }
 
-    if (user && user.role !== "admin") {
+    if (user && user.role !== "ADMIN_ROLE") {
       router.push("/login");
       return;
     }
-    alert("Bienvenido admin");
+    if(user){
+      alert("Bienvenido admin");
+    }
   }, [user, router]);
 
   return (

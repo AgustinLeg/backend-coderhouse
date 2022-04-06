@@ -20,7 +20,7 @@ const UserMenu = () => {
   const { user } = useContext(AuthContext);
   return (
     <HStack spacing={{ base: "0", md: "6" }}>
-      {user && user.role === "admin" && (
+      {user && user.role === "ADMIN_ROLE" && (
         <NextLink href="/admin/productos" passHref>
           <Link p={2} bg="teal" color="white">ADMIN</Link>
         </NextLink>

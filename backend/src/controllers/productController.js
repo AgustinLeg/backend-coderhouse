@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const pathFile = "./productos.txt";
 
-class Products {
+class Product {
   getAll(req, res) {
     fs.readFile(pathFile, "utf8", (err, data) => {
       if (err) {
@@ -134,4 +134,4 @@ class Products {
   };
 }
 
-module.exports = new Products();
+module.exports = new Product();

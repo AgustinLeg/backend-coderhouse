@@ -1,7 +1,5 @@
 const express = require("express");
-const { engine } = require("express-handlebars");
 const cors = require("cors");
-
 const path = require("path");
 
 class Server {
@@ -9,8 +7,7 @@ class Server {
     this.app = express();
     this.port = process.env.PORT || 8080;
     this.pathProducts = "/api/productos";
-
-    this.engine();
+    this.pathCart = "/api/carrito";
 
     this.middlewares();
 
@@ -23,31 +20,12 @@ class Server {
 
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
-
-    this.app.use(express.static("./public"));
-
-    this.app.set("views", path.resolve("./src/views"));
-    this.app.set("view engine", "hbs");
+    this.app.use(express.static(path.join(__dirname, '../public')));
   }
 
   routes() {
-    this.app.use(this.pathProducts, require("../routes/ProductsRouter"));
-
-    this.app.get("/", (req, res) => {
-      res.render("formulario");
-    });
-  }
-
-  engine() {
-    this.app.engine(
-      "hbs",
-      engine({
-        extname: ".hbs",
-        defaultLayout: "index.hbs",
-        layoutsDir: path.resolve("./src/views/layouts"),
-        partialsDir: path.resolve("./src/views/partials/"),
-      })
-    );
+    this.app.use(this.pathProducts, require("../routes/ProductRouter"));
+    this.app.use(this.pathCart, require("../routes/CartRouter"));
   }
 
   listen() {

@@ -15,9 +15,14 @@ export const AuthProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, INITIAL_AUTH_STATE);
 
   const loginUser = (email: string, password: string) => {
+    let role = 'USER_ROLE'
+    if(email === 'admin@gmail.com') {
+      role = 'ADMIN_ROLE'
+    }
+    
     dispatch({
       type: "[AUTH] Login",
-      payload: { email, name: "user", id: "1", role: "admin" },
+      payload: { email, name: "user", id: email, role },
     });
   };
 
