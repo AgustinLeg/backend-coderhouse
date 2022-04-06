@@ -10,7 +10,7 @@ router.get("/", Products.getAll);
 router.get("/random", Products.getRandom);
 
 // Producto por ID
-router.get("/:id", Products.getById);
+router.get("/:id", Products.getBySlug);
 
 // Crear producto
 router.post("/", Products.newProduct);

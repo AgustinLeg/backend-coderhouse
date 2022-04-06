@@ -1,5 +1,6 @@
 const express = require("express");
 const { engine } = require("express-handlebars");
+const cors = require("cors");
 
 const path = require("path");
 
@@ -17,6 +18,9 @@ class Server {
   }
 
   middlewares() {
+    // CORS
+    this.app.use(cors());
+
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
 
@@ -47,7 +51,7 @@ class Server {
   }
 
   listen() {
-    this.server.listen(this.port, () => {
+    this.app.listen(this.port, () => {
       console.log(`🚀 Server started on http://localhost:${this.port}`);
     });
   }

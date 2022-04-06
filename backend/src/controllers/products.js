@@ -25,15 +25,15 @@ class Products {
       res.json(product);
     });
   }
-  getById(req, res) {
-    const id = req.params.id;
+  getBySlug(req, res) {
+    const slug = req.params.id;
     fs.readFile(pathFile, "utf8", (err, data) => {
       if (err) {
         console.error(err);
         return;
       }
       const dataParsed = JSON.parse(data);
-      const product = dataParsed.find((product) => product.id === id);
+      const product = dataParsed.find((product) => product.slug === slug);
 
       if (!product)
         return res.status(404).send({ error: "producto no encontrado" });
@@ -43,8 +43,8 @@ class Products {
   }
 
   newProduct(req, res) {
-    const { title, price, thumbnail } = req.body;
-    if (!title || !price || !thumbnail) {
+    const { name, price, thumbnail } = req.body;
+    if (!name || !price || !thumbnail) {
       return res.status(406).send({ error: "Faltan datos", status: 406 });
     }
 
@@ -65,7 +65,7 @@ class Products {
         : 1;
       const newProduct = {
         id: id.toString(),
-        title,
+        name,
         price,
         thumbnail,
       };
@@ -78,9 +78,10 @@ class Products {
   }
 
   updateProduct(req, res) {
-    const { title, price, thumbnail } = req.body;
+    console.log(req.body);
+    const { name, price, image } = req.body;
     const id = req.params.id;
-    if (!title.length || !price.length || !thumbnail.length) {
+    if (!name.length || !price.length || !image.length) {
       return res.status(406).send({ error: "Faltan datos", status: 406 });
     }
 
@@ -92,7 +93,7 @@ class Products {
       const products = JSON.parse(data);
       const newProducts = products.map((product) => {
         if (product.id === id) {
-          return { id, title, price, thumbnail };
+          return { ...product, name, price, image };
         }
         return product;
       });
@@ -133,4 +134,4 @@ class Products {
   };
 }
 
-module.exports = new Products;
+module.exports = new Products();
