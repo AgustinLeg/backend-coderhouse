@@ -20,7 +20,7 @@ Mongo Community Server o Docker
 
 ### Instalación 🔧
 
-_Una serie de ejemplos paso a paso que te dice lo que debes ejecutar para tener un entorno de desarrollo ejecutandose_
+_Para desarollo podes seguir estos pasos._
 
 ```sh
 git clone https://github.com/AgustinLeg/backend-coderhouse
