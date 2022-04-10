@@ -85,9 +85,9 @@ function loadMessages(messages) {
     <li class="d-flex align-items-center justify-content-start gap-3 my-2">
       <div class="d-flex align-items-center justify-content-center gap-2">
         <strong class="pr-1 text-primary">${message.email}</strong>
-        <span class="text-danger">[${message.date}]</span>
+        <span class="text-danger">[${message.fecha}]</span>
       </div>
-      <p class="m-0 pl-5 text-success">${message.text}</p>
+      <p class="m-0 pl-5 text-success">${message.mensaje}</p>
     </li>`;
   });
 }
@@ -120,8 +120,8 @@ function newMessage(e) {
 
   const message = {
     email: emailInput,
-    text: messageInput,
-    date: dformat,
+    mensaje: messageInput,
+    fecha: dformat,
   };
 
   socket.emit("new-message", message);

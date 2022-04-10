@@ -1,7 +1,8 @@
 const fs = require("fs");
 
+const knexSqlite = require('../DB/sqliteConfg')
+
 const pathFile = "./productos.txt";
-const messageFile = "./mensajes.txt";
 
 class Sockets {
   constructor(io) {
@@ -57,39 +58,31 @@ class Sockets {
       });
 
       // CHAT
-      socket.on("all-messages", () => {
-        fs.readFile(messageFile, "utf8", (err, data) => {
-          if (err) {
-            console.error(err);
-            socket.emit("error", "Ups hubo un error");
-            return;
-          }
-          const messages = JSON.parse(data);
-          this.io.emit("messages", messages);
-        });
+      socket.on("all-messages", async () => {
+        try {
+          const response  = await knexSqlite('mensajes');
+          console.log('Mensaje obtenidos con exito ✅')
+          this.io.emit('messages',response)
+        } catch (error) {
+          console.log(error)
+          socket.emit("error", "Ups hubo un error");
+          return;
+        }
       });
 
-      socket.on("new-message", (payload) => {
-        fs.readFile(messageFile, "utf8", (err, data) => {
-          if (err) {
-            console.error(err);
-            socket.emit("error", "Ups hubo un error");
-            return;
-          }
-          const messages = JSON.parse(data);
-          const id = messages.length
-            ? Number(messages[messages.length - 1].id) + 1
-            : 1;
-          const newMessage = {
-            id: id.toString(),
-            ...payload,
-          };
+      socket.on("new-message", async (payload) => {
+        try {
+          await knexSqlite.insert([payload]).from('mensajes');
+          console.log('Mensaje Creado con exito ✅')
 
-          messages.push(newMessage);
-
-          fs.writeFileSync(messageFile, JSON.stringify(messages), "utf8");
-          this.io.emit("messages", messages);
-        });
+          const messages  = await knexSqlite('mensajes');
+          console.log('Mensaje obtenidos con exito ✅')
+          this.io.emit('messages',messages)
+        } catch (error) {
+          console.log(error)
+          socket.emit("error", "Ups hubo un error");
+          return;
+        }
       });
 
       socket.on("disconnect", () => {
