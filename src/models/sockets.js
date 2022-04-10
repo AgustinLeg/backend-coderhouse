@@ -1,8 +1,6 @@
-const fs = require("fs");
-
 const knexSqlite = require('../DB/sqliteConfg')
+const knex = require('../DB/mariaConfig')
 
-const pathFile = "./productos.txt";
 
 class Sockets {
   constructor(io) {
@@ -17,51 +15,40 @@ class Sockets {
       console.log("usuario conectado");
 
       // Productos
-      socket.on("all-products", () => {
-        fs.readFile(pathFile, "utf8", (err, data) => {
-          if (err) {
-            console.error(err);
-            socket.emit("error", "Ups hubo un error");
-            return;
-          }
-          const productos = JSON.parse(data);
-          this.io.emit("envioProds", productos);
-        });
+      socket.on("all-products", async() => {
+        try {
+          const response  = await knex('productos');
+          console.log('Productos obtenidos con exito ✅')
+          this.io.emit('envioProds',response)
+        } catch (error) {
+          console.log(error)
+          socket.emit("error", "Ups hubo un error");
+          return;
+        }
       });
 
-      socket.on("new-product", ({ title, price, thumbnail }) => {
-        if (!Number(price)) {
+      socket.on("new-product", async(payload) => {
+        if (!Number(payload.price)) {
           return socket.emit("error", "El precio debe ser un numero");
         }
-        fs.readFile(pathFile, "utf8", (err, data) => {
-          if (err) {
-            console.error(err);
-            socket.emit("error", "Ups hubo un error");
-            return;
-          }
-          const products = JSON.parse(data);
-          const id = products.length
-            ? Number(products[products.length - 1].id) + 1
-            : 1;
-          const newProduct = {
-            id: id.toString(),
-            title,
-            price,
-            thumbnail,
-          };
-
-          products.push(newProduct);
-
-          fs.writeFileSync(pathFile, JSON.stringify(products), "utf8");
-          this.io.emit("envioProds", products);
-        });
+        try {
+          await knex.insert([payload]).from('productos')
+          console.log('Producto agregado con exito 🎉')
+          const response  = await knex('productos');
+          console.log('Productos obtenidos con exito ✅')
+          this.io.emit('envioProds',response)
+        } catch (error) {
+          console.log(error)
+          socket.emit("error", "Ups hubo un error");
+          return;
+        }
       });
 
       // CHAT
       socket.on("all-messages", async () => {
         try {
           const response  = await knexSqlite('mensajes');
-          console.log('Mensaje obtenidos con exito ✅')
+          console.log('Mensajes obtenidos con exito ✅')
           this.io.emit('messages',response)
         } catch (error) {
           console.log(error)
