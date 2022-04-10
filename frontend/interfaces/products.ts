@@ -6,6 +6,7 @@ export interface IProduct {
   price: number;
   name: string;
   slug: string;
+  description: string;
 
   // TODO: agregar createdAt y updatedAt
 

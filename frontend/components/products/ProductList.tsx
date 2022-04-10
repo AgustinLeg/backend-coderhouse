@@ -17,10 +17,11 @@ export const ProductList: FC<Props> = ({ products }) => {
       }}
       justifyContent="center"
       gap={6}
-      p={{ base: 2, md: 4 }}
     >
       {products.map((product) => (
+        <>
         <ProductCard key={product.id} product={product} />
+        </>
       ))}
     </Grid>
   );

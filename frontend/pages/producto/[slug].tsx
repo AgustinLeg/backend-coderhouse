@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 
 import { IProduct } from "../../interfaces/products";
-import MainLayout from "../../components/layouts/MainLayout";
+import {ShopLayout} from "../../components/layouts";
 import { useContext } from "react";
 import { CartContext } from "../../context";
 
@@ -39,7 +39,7 @@ const ProductDetails = () => {
   };
   
   return (
-    <MainLayout>
+    <ShopLayout>
       <Container maxW={"7xl"}>
         <SimpleGrid
           columns={{ base: 1, lg: 2 }}
@@ -95,7 +95,7 @@ const ProductDetails = () => {
           </Stack>
         </SimpleGrid>
       </Container>
-    </MainLayout>
+    </ShopLayout>
   );
 };
 

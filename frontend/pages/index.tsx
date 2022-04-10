@@ -1,19 +1,23 @@
 import type { NextPage } from "next";
-import MainLayout from "../components/layouts/MainLayout";
-import { ProductList } from "../components/products/ProductList";
+import { Box, Heading } from "@chakra-ui/react";
+
+import { ShopLayout } from "../components/layouts";
+import { ProductList } from "../components/products";
+
 import { useProducts } from "../hooks/useProducts";
+
 import { IProduct } from "../interfaces";
 
 const Home: NextPage = () => {
   const { products } = useProducts("/productos") as{products: IProduct[]};
 
   return (
-    <MainLayout>
-      <div>
-        <h2>Productos</h2>
+    <ShopLayout>
+      <Box p={5}>
+        <Heading mb={10} size="2xl">Productos</Heading>
         <ProductList products={products} />
-      </div>
-    </MainLayout>
+      </Box>
+    </ShopLayout>
   );
 };
 

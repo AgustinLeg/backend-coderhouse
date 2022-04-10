@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import NavBar from "../ui/NavBar";
+import {NavBar} from "../ui";
 
-const MainLayout: FC = ({ children }) => {
+export const ShopLayout: FC = ({ children }) => {
   return (
     <>
       <NavBar />
@@ -9,5 +9,3 @@ const MainLayout: FC = ({ children }) => {
     </>
   );
 };
-
-export default MainLayout;
