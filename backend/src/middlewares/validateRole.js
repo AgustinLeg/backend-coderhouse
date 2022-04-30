@@ -1,9 +1,7 @@
 const adminRole = (req, res, next ) => {
-  const {role, name} = req.body
-  console.log(req.body)
-
+  const {role} = req.body
   if(role !== 'ADMIN_ROLE'){
-      return res.status(401).json({message: `${name} no tiene los permisos necesarios`});
+      return res.status(401).json({message: 'No tienes permisos para hacer esto'});
   }
 
   next();

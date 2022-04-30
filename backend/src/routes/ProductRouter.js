@@ -7,11 +7,9 @@ const router = Router();
 // Obtener todos los productos
 router.get("/", Product.getAll);
 
-// Producto random
-router.get("/random", Product.getRandom);
 
 // Producto por ID
-router.get("/:id", Product.getBySlug);
+router.get("/:slug", Product.getBySlug);
 
 // Crear producto
 router.post("/", adminRole, Product.newProduct);
