@@ -1,0 +1,1 @@
+{"c":["pages/index","pages/producto/[slug]","webpack"],"r":[],"m":["./components/cart/CartItem.tsx","./components/cart/CartList.tsx","./components/cart/OrderSummary.tsx","./components/ui/UserMenu.tsx","./node_modules/react-icons/md/index.esm.js"]}

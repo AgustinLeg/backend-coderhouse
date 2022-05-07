@@ -2,19 +2,22 @@ const express = require("express");
 const { engine } = require("express-handlebars");
 const { Server: HttpServer } = require("http");
 const { Server: IOServer } = require("socket.io");
+const mongoStore = require("connect-mongo");
 const Sockets = require("./sockets");
 
 const path = require("path");
 
-const fs = require("fs");
-
-const pathFile = "./productos.txt";
+const { faker } = require("@faker-js/faker");
+const session = require("express-session");
+const auth = require("../middlewares/auth");
 
 class Server {
   constructor() {
     this.app = express();
-    this.port = process.env.PORT || 8080;
+    this.port = process.env.PORT;
     this.pathProducts = "/api/productos";
+    this.pathProductsTest = "/api/productos-test";
+    this.pathAuth = "/api/auth";
 
     this.engine();
 
@@ -39,22 +42,52 @@ class Server {
 
     this.app.set("views", path.resolve("./src/views"));
     this.app.set("view engine", "hbs");
+
+    this.app.use(
+      session({
+        store: mongoStore.create({
+          mongoUrl: process.env.MONGO_URL,
+          options: {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+          },
+        }),
+        secret: process.env.SECRET,
+        resave: true,
+        saveUninitialized: true,
+      })
+    );
   }
 
   routes() {
     this.app.use(this.pathProducts, require("../routes/ProductsRouter"));
+    this.app.use(
+      this.pathProductsTest,
+      require("../routes/ProductsRouterTest")
+    );
+    this.app.use(this.pathAuth, require("../routes/AuthRouter"));
     this.app.get("/productos", (req, res) => {
-      fs.readFile(pathFile, "utf8", (err, data) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        const dataParsed = JSON.parse(data);
-        res.render("productos", { data: dataParsed });
-      });
+      let productosFalsos = [];
+      for (let i = 0; i < 5; i++) {
+        const newProducto = {
+          id: faker.random.number({ min: 1, max: 100 }),
+          title: faker.commerce.productName(),
+          price: faker.commerce.price(),
+          thumbnail: faker.image.image(),
+        };
+        productosFalsos.push(newProducto);
+      }
+      res.render("productos", { data: productosFalsos });
     });
-    this.app.get("/", (req, res) => {
-      res.render("formulario");
+    this.app.get("/", auth, (req, res) => {
+      res.render("formulario", { user: req.session.user });
+    });
+
+    this.app.get("/login", (req, res) => {
+      if (req.session.user) {
+        return res.redirect("/");
+      }
+      res.render("login");
     });
   }
 

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { faker } = require("@faker-js/faker");
 
 const pathFile = "./productos.txt";
 
@@ -105,7 +106,7 @@ class Products {
     });
   }
 
-  removeProduct = (req, res) => {
+  removeProduct(req, res) {
     const id = req.params.id;
     fs.readFile(pathFile, "utf8", (err, data) => {
       if (err) {
@@ -130,7 +131,25 @@ class Products {
         producto: removedProduct,
       });
     });
-  };
+  }
+
+  getTest(req, res) {
+    let productosFalsos = [];
+    for (let i = 0; i < 5; i++) {
+      const newProducto = {
+        id: faker.random.number({ min: 1, max: 100 }),
+        title: faker.commerce.productName(),
+        price: faker.commerce.price(),
+        thumbnail: faker.image.image(),
+      };
+      productosFalsos.push(newProducto);
+    }
+    // fs.writeFile(pathFile, str, (err) => {
+    //   if (err) throw err;
+    //   console.log("The file has been saved!");
+    // });
+    res.json(productosFalsos);
+  }
 }
 
-module.exports = new Products;
+module.exports = new Products();
