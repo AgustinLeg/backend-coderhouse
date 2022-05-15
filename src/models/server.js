@@ -8,8 +8,11 @@ const Sockets = require("./sockets");
 const path = require("path");
 
 const { faker } = require("@faker-js/faker");
+const passport = require("passport");
 const session = require("express-session");
+
 const auth = require("../middlewares/auth");
+const { dbConnection } = require("../database");
 
 class Server {
   constructor() {
@@ -18,6 +21,8 @@ class Server {
     this.pathProducts = "/api/productos";
     this.pathProductsTest = "/api/productos-test";
     this.pathAuth = "/api/auth";
+
+    this.contectarDB();
 
     this.engine();
 
@@ -34,6 +39,10 @@ class Server {
     this.initSocket();
   }
 
+  async contectarDB() {
+    await dbConnection();
+  }
+
   middlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
@@ -46,7 +55,7 @@ class Server {
     this.app.use(
       session({
         store: mongoStore.create({
-          mongoUrl: process.env.MONGO_URL,
+          mongoUrl: process.env.MONGO_URI,
           options: {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -57,6 +66,8 @@ class Server {
         saveUninitialized: true,
       })
     );
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
   }
 
   routes() {
@@ -80,7 +91,7 @@ class Server {
       res.render("productos", { data: productosFalsos });
     });
     this.app.get("/", auth, (req, res) => {
-      res.render("formulario", { user: req.session.user });
+      res.render("formulario", { user: req.user });
     });
 
     this.app.get("/login", (req, res) => {
@@ -88,6 +99,15 @@ class Server {
         return res.redirect("/");
       }
       res.render("login");
+    });
+    this.app.get("/signup", (req, res) => {
+      res.render("signup");
+    });
+    this.app.get("/failSignup", (req, res) => {
+      res.render("failSignup");
+    });
+    this.app.get("/failLogin", (req, res) => {
+      res.render("failLogin");
     });
   }
 

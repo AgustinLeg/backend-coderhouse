@@ -1,11 +1,11 @@
 class Auth {
   login(req, res) {
-    const { user } = req.body;
-    if (user) {
-      req.session.user = user;
-      res.redirect("/");
+    if (req.isAuthenticated()) {
+      const user = req.user;
+      console.log("usuario logeado", user);
+      res.render("formulario", { user: user.userName });
     } else {
-      res.send("Usuario o contraseña incorrectos");
+      res.redirect("/login");
     }
   }
   logout(req, res) {
@@ -16,6 +16,14 @@ class Auth {
         res.redirect("/login");
       }
     });
+  }
+
+  signup(req, res) {
+    const user = req.body;
+    if (user) {
+      req.session.user = user;
+      res.redirect("/login");
+    }
   }
 }
 
