@@ -21,7 +21,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
   return (
     <LinkBox as="article" position="relative" cursor="pointer">
       <Image
-        src={product.image}
+        src={product.images[0]}
         alt={`Picture of ${product.name}`}
         w="full"
       />

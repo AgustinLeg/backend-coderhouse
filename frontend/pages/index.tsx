@@ -9,7 +9,7 @@ import { useProducts } from "../hooks/useProducts";
 import { IProduct } from "../interfaces";
 
 const Home: NextPage = () => {
-  const { products } = useProducts("/productos") as{products: IProduct[]};
+  const { products } = useProducts("/products") as{products: IProduct[]};
 
   return (
     <ShopLayout>

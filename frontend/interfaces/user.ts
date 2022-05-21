@@ -1,6 +1,8 @@
-export interface IUser {
-  id: string;
+export interface UserData {
   name: string;
+  lastName: string;
   email: string;
-  role: string;
+  password: string;
 }
+
+export type IUser = Omit<UserData, "password"> & { _id: string };

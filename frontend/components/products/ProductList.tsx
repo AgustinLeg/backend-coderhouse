@@ -19,9 +19,7 @@ export const ProductList: FC<Props> = ({ products }) => {
       gap={6}
     >
       {products.map((product) => (
-        <>
         <ProductCard key={product.id} product={product} />
-        </>
       ))}
     </Grid>
   );
