@@ -1,0 +1,76 @@
+import { Request, Response } from 'express'
+import User from '../models/user'
+import bcrypt from 'bcrypt'
+import { isValidEmail, jwt } from '../utils'
+
+export const login = async (req: Request, res: Response) => {
+  const { email, password } = req.body
+  if (!email || !password) {
+    return res.status(400).send({ error: 'Faltan datos', status: 400 })
+  }
+  if (!isValidEmail(email)) {
+    return res.status(400).send({ error: 'Email invalido', status: 400 })
+  }
+  const userDB = await User.findOne({ email })
+  if (!userDB) {
+    return res.status(400).send({ error: 'Usuario no encontrado', status: 400 })
+  }
+  if (!bcrypt.compareSync(password, userDB.password)) {
+    return res.status(400).send({ error: 'Contraseña incorrecta', status: 400 })
+  }
+  const token = jwt.signToken(userDB._id, userDB.email)
+  return res.json({ token, user: userDB })
+}
+
+export const register = async (req: Request, res: Response) => {
+  const { name, lastName, email, password } = req.body
+  if (
+    !name ||
+    name.length < 2 ||
+    !lastName ||
+    lastName.length < 3 ||
+    !email ||
+    !password
+  ) {
+    return res.status(400).send({ error: 'Faltan datos', status: 400 })
+  }
+
+  if (!isValidEmail(email)) {
+    return res.status(400).send({ error: 'Email invalido', status: 400 })
+  }
+
+  if (password.length < 6) {
+    return res.status(400).send({ error: 'Password invalido', status: 400 })
+  }
+
+  const user = await User.findOne({ email })
+
+  if (user) {
+    return res.status(400).send({ error: 'Email ya existe', status: 400 })
+  }
+
+  const newUser = new User({
+    name,
+    lastName,
+    email,
+    password: bcrypt.hashSync(password, 10),
+    role: 'USER',
+  })
+
+  try {
+    await newUser.save()
+
+    const { _id, email } = newUser
+
+    const token = await jwt.signToken(_id, email)
+
+    return res.json({
+      token,
+      user: newUser,
+    })
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ error: 'Error al crear usuario', status: 500 })
+  }
+}
