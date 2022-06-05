@@ -10,7 +10,12 @@
     "lint": "eslint src/**/*.ts",
     "lint-fix": "eslint --fix src/**/*.ts",
     "format": "npx prettier --write src/**/*.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fork": "pm2 start index.js --name server1 --watch -- 8080",
+    "cluster": "pm2 start index.js --name server2 -i 5 --watch -- 8081",
+    "loadbalance": "nodemon cluster.js",
+    "pm2": "pm2 start ecosystem.config.js",
+    "forever": "forever start forever.js 8080"
   },
   "keywords": [],
   "author": "",
