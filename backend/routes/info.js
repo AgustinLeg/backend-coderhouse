@@ -1,25 +1,23 @@
 const express = require('express')
-const { ARGS } = require('../utils/minimist.js')
+const minimist = require('minimist')
 const numCPUs = require('os').cpus().length
+const logger = require('../loggers')
 
 const router = express.Router()
-const PORT = process.argv[2]
 
 router.get('/', (req, res) => {
-  const html = `
-   <h2>Informacion de la app</h2>
-   <ul>
-      <li>carpeta proyecto <strong>${process.cwd()}</strong> </li><br/>
-      <li>argumentos <strong> ${JSON.stringify(
-        process.argv.slice(2)
-      )}</strong></li><br/>
-      <li>Sistema operativo <strong> ${process.platform}</strong></li><br/>
-      <li>ID proceso <strong>${process.pid}</strong></li><br/>
-      <li>memoria <strong> ${process.memoryUsage().rss}</strong></li><br/>
-      <li>cantidad de procesadores <strong> ${numCPUs}</strong></li><br/>
-      <li>escuchando el puerto <strong> ${PORT || 8080}</strong></li><br/>
-   </ul>
-   `
+  const arg = minimist(process.argv.slice(2))
+  let html = `<h1>INFORMACIÓN DE SESIÓN</h1><br><ul>`
+  html += `<li>Argumentos de Entrada: ${JSON.stringify(arg)}</li>`
+  html += `<li>Path: ${process.cwd()}</li>`
+  html += `<li>Sistema Operativo: ${process.platform}</li>`
+  html += `<li>ID Proceso: ${process.pid}</li>`
+  html += `<li>Versión Node: ${process.version}</li>`
+  html += `<li>Carpeta Proyecto: ${process.execPath}</li>`
+  html += `<li>Memoria Total Reservada (RSS): ${process.memoryUsage().rss}</li>`
+  html += `<li>Número de Procesadores del Servidor: ${numCPUs}</li>`
+
+  logger.info(`Get Info/ ${html}`)
   res.status(200).send(html)
 })
 

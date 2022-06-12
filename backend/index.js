@@ -1,37 +1,62 @@
-const dotenv = require('dotenv')
+const cluster = require('cluster')
+const nCpus = require('os').cpus().length
 const express = require('express')
-const http = require('http')
-const infoRoute = require('./routes/info.js')
-const randomRoute = require('./routes/randomRoute.js')
-const notFound = require('./middlewares/notFound.js')
+const cors = require('cors')
+const morgan = require('morgan')
+const dotenv = require('dotenv')
 
-dotenv.config()
+const PORT = process.argv[2] || 3000
+const modoCluster = process.argv[3] === 'CLUSTER'
 
-const app = express()
-const serverHttp = http.createServer(app)
-const PORT = process.argv[2] || 8080
+if (modoCluster && cluster.isMaster) {
+  console.log(`Master PID ${process.pid} is running`)
+  for (let i = 0; i < nCpus; i++) {
+    cluster.fork()
+  }
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`Worker PID ${worker.process.pid} died`)
+    cluster.fork()
+  })
+} else {
+  dotenv.config()
+  const app = express()
+  app.use(cors())
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: true }))
+  app.use(morgan('dev'))
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+  app.use('/info-comprimido', infoRoute)
+  app.use('/info', infoRoute)
+  app.use('/api/random', randomRoute)
 
-app.use('/info', infoRoute)
-app.use('/api/random', randomRoute)
+  app.get('/', (req, res) => {
+    const primes = []
+    const max = Number(req.query.max) || 1000
+    for (let i = 0; i < max; i++) {
+      if (isPrime(i)) primes.push(i)
+    }
+    res.json(primes)
+  })
 
-app.get('/', (req, res) => {
-  res.send(`
-  <h1>estamos en Server-master en puerto ${process.argv[2] || PORT}</h1>
-  <a href="/info">ir a info</a><br />
-  <h5>balance de carga en /api/random en puertos 8082, 8083 ,8084, 8085</h5>
-  <a href="/api/random">ir a api/random</a>
-  `)
-})
+  const server = app.listen(PORT, () =>
+    console.log(
+      `🔥 Server started on port http://localhost:${PORT}-PID ${process.pid}`
+    )
+  )
+  server.on('error', (err) => console.log(err))
+}
 
-// --Ruta mock productos
-// app.use('/api/productos-test', mockProductRoutes)
-
-// --404 not Found
-app.use(notFound)
-
-serverHttp.listen(PORT, () => {
-  console.log(`servidor iniciado en el puerto ${PORT}`)
-})
+function isPrime(num) {
+  if ([2, 3].includes(num)) return true
+  else if ([2, 3].some((n) => num % n == 0)) return false
+  else {
+    let i = 5,
+      w = 2
+    while (i ** 2 <= num) {
+      if (num % i == 0) return false
+      i += w
+      w = 6 - w
+    }
+  }
+  return true
+}

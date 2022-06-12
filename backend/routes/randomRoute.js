@@ -3,7 +3,7 @@ const { fork } = require('child_process')
 
 const router = express.Router()
 
-let calculo = fork('./utils/random.js')
+let calculo = fork('./calc.js')
 
 router.get('/', (req, res) => {
   const { cantidad = 1000000 } = req.query
