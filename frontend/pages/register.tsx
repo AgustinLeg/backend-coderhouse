@@ -25,6 +25,7 @@ import { AuthContext } from "../context";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { ShopLayout } from "../components/layouts";
+import { UserData } from "../interfaces";
 
 interface FormData {
   name: string;
@@ -48,7 +49,7 @@ export default function Register() {
 
   const handleRegister = async (data: FormData) => {
     setError(false);
-    const resp = await registerUser(data);
+    const resp = await registerUser(data as UserData);
     if (!resp) {
       return setError(true);
     }

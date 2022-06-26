@@ -20,7 +20,7 @@ const Producto = () => {
     push,
     query: { slug },
   } = useRouter();
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const { products } = useProducts(`/productos/${slug}`) as {
     products: IProduct;
     isLoading: boolean;
@@ -36,8 +36,8 @@ const Producto = () => {
   useEffect(() => {
     setValues((val) => ({
       ...val,
-      name: products.name,
-      image: products.image,
+      title: products.title,
+      image: products.images[0],
       price: products.price,
     }));
   }, [products]);
@@ -62,14 +62,14 @@ const Producto = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({...values, role: user!.role}), 
+      body: JSON.stringify({ ...values, role: user!.role }),
     });
-    if(!response.ok){
+    if (!response.ok) {
       alert(response.statusText);
-      return
+      return;
     }
     alert("Producto actualizado");
-    push('/admin/productos');
+    push("/admin/productos");
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

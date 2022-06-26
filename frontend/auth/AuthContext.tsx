@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { IUser, UserData } from "../../interfaces";
+import { IUser, UserData } from "../interfaces";
 
 interface ContextProps {
   user: IUser | null;

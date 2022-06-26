@@ -1,8 +1,8 @@
 import React, { FC, useReducer } from "react";
 import { AuthContext, authReducer } from "./";
-import { IUser, UserData } from "../../interfaces";
+import { IUser, UserData } from "../interfaces";
 import Cookies from "js-cookie";
-import shopApi from "../../api";
+import shopApi from "../api";
 
 export interface AuthState {
   user: IUser | null;

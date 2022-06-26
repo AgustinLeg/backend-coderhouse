@@ -1,9 +1,8 @@
-import React, { useEffect, useContext, useCallback, useState } from "react";
+import React, { useEffect, useContext } from "react";
 import { AdminLayout } from "../../components/layouts/AdminLayout";
 import { AuthContext } from "../../context";
 import { useRouter } from "next/router";
 import {
-  Button,
   Image,
   Link,
   Table,
@@ -34,7 +33,7 @@ const Productos = () => {
       router.push("/login");
       return;
     }
-    if(user){
+    if (user) {
       alert("Bienvenido admin");
     }
   }, [user, router]);
@@ -59,15 +58,17 @@ const Productos = () => {
                 <Td w="25%">
                   <Image
                     w="50%"
-                    src={product.image}
-                    alt={`producto ${product.name}`}
+                    src={product.images[0]}
+                    alt={`producto ${product.title}`}
                   />
                 </Td>
-                <Td>{product.name}</Td>
+                <Td>{product.title}</Td>
                 <Td isNumeric>{product.price}</Td>
                 <Td>
                   <NextLink href={`/admin/producto/${product.slug}`} passHref>
-                    <Link bg="blue" color="white" p={2}>Ver mas</Link>
+                    <Link bg="blue" color="white" p={2}>
+                      Ver mas
+                    </Link>
                   </NextLink>
                 </Td>
               </Tr>

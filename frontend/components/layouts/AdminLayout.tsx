@@ -1,7 +1,11 @@
 import React, { FC } from "react";
-import {NavBar} from "../ui";
+import { NavBar } from "../ui";
 
-export const AdminLayout: FC = ({ children }) => {
+interface Props {
+  children: any;
+}
+
+export const AdminLayout: FC<Props> = ({ children }) => {
   return (
     <>
       <NavBar />
