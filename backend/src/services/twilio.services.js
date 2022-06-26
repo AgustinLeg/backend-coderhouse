@@ -1,16 +1,19 @@
 import twilio from 'twilio'
-import dotenv from 'dotenv'
-import logger from './logger.js'
+import logger from './logger.services.js'
+import {
+  SID_TWILIO,
+  TOKEN_TWILIO,
+  SMS_ADMIN,
+  WP_ADMIN,
+} from '../config/index.js'
 
-dotenv.config()
-
-const client = twilio(process.env.SID_TWILIO, process.env.TOKEN_TWILIO)
+const client = twilio(SID_TWILIO, TOKEN_TWILIO)
 
 export const sms = async (body, to) => {
   try {
     const message = {
       body,
-      from: `+${process.env.SMS_ADMIN}`,
+      from: `+${SMS_ADMIN}`,
       to: `+${to}`,
     }
     const response = await client.messages.create(message)
@@ -24,7 +27,7 @@ export const wp = async (body, to, att) => {
   try {
     const message = {
       body,
-      from: `whatsapp:+${process.env.WP_ADMIN}`,
+      from: `whatsapp:+${WP_ADMIN}`,
       to: `whatsapp:+${to}`,
     }
     if (att !== '') {

@@ -12,7 +12,7 @@ import {
 } from './routes/index.js'
 
 import { PORT, whiteList } from './config/index.js'
-import { logger } from './utils/index.js'
+import { logger } from './services/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

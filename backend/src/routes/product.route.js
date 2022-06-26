@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { Product } from '../controllers/index.js'
 import { adminRole } from '../middlewares/index.js'
-import logger from '../utils/logger.js'
+import { logger } from '../services/index.js'
 
 export const ProductRouter = Router()
 

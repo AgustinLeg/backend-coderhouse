@@ -1,5 +1,5 @@
-import { sendGmail } from './email.js'
-import { sms, wp } from './twilio.js'
+import { sendGmail } from './email.services.js'
+import { sms, wp } from './twilio.services.js'
 
 const MAIL_ADMIN = process.env.MAIL_ADMIN
 

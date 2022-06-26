@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { fork } from 'child_process'
-import { logger } from '../utils/index.js'
+import { logger } from '../services/index.js'
 
 export const RandomRouter = Router()
 

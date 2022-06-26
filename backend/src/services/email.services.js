@@ -5,7 +5,7 @@ import {
   MAIL_PORT,
   MAIL_USER,
 } from '../config/index.js'
-import logger from './logger.js'
+import logger from './logger.services.js'
 
 const transporter = createTransport({
   host: MAIL_HOST,

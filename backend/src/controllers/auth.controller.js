@@ -1,7 +1,7 @@
 import { User } from '../models/index.js'
 import bcrypt from 'bcrypt'
-import { isValidEmail, jwt, logger } from '../utils/index.js'
-import { mailNuevoUsuario } from '../utils/notifications.js'
+import { isValidEmail, jwt } from '../utils/index.js'
+import { mailNuevoUsuario, logger } from '../services/index.js'
 
 export const login = async (req, res) => {
   const { email, password } = req.body

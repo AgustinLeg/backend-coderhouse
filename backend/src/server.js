@@ -1,6 +1,6 @@
 import app from './app.js'
 import { DB } from './database/index.js'
-import { logger } from './utils/index.js'
+import { logger } from './services/index.js'
 
 /**
  * Start Express server.

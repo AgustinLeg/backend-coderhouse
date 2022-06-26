@@ -2,12 +2,12 @@ import { Product, Order } from '../models/index.js'
 
 // import { jwt } from '../utils/index.js'
 import jwt from 'jsonwebtoken'
-import logger from '../utils/logger.js'
 import {
+  logger,
   mailNuevaVenta,
   smsNuevaVenta,
   wpNuevaVenta,
-} from '../utils/notifications.js'
+} from '../services/index.js'
 
 export const createOrder = async (req, res) => {
   const { orderItems, total } = req.body

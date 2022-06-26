@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import minimist from 'minimist'
 import { cpus } from 'os'
-import { logger } from '../utils/index.js'
+import { logger } from '../services/index.js'
 
 const numCPUs = cpus().length
 
