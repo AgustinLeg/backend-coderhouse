@@ -1,11 +1,18 @@
+import { Container } from "@chakra-ui/react";
 import React, { FC } from "react";
-import {NavBar} from "../ui";
+import { NavBar } from "../ui";
 
-export const ShopLayout: FC = ({ children }) => {
+interface Props {
+  children: any;
+}
+
+export const ShopLayout: FC<Props> = ({ children }) => {
   return (
     <>
       <NavBar />
-      <main>{children}</main>
+      <Container as="main" maxW="1260px">
+        {children}
+      </Container>
     </>
   );
 };

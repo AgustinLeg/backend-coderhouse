@@ -11,28 +11,32 @@ import {
   Box,
   Flex,
   Text,
+  VStack,
+  Stack,
+  Heading,
+  Link,
 } from "@chakra-ui/react";
 import { RiShoppingBag3Line } from "react-icons/ri";
 import { CartContext } from "../../context";
-import { OrderSummary, CardItem } from ".";
+import { CartItem } from ".";
+import NextLink from "next/link";
 
 export const CartList = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { cart } = useContext(CartContext);
+  const { cart, subTotal } = useContext(CartContext);
   const btnRef = useRef(null);
 
   return (
     <>
       <Button ref={btnRef} variant="ghost" onClick={onOpen} p={0}>
         <RiShoppingBag3Line size={25} />
-        {cart.length > 0 && <Text fontSize='sm'>{cart.length}</Text>}
+        {cart.length > 0 && <Text fontSize="sm">{cart.length}</Text>}
       </Button>
       <Drawer
         isOpen={isOpen}
         placement="right"
         onClose={onClose}
         finalFocusRef={btnRef}
-        size="md"
       >
         <DrawerOverlay />
         <DrawerContent>
@@ -49,13 +53,33 @@ export const CartList = () => {
               >
                 <Box flex={1} w="full">
                   {cart.map((item) => (
-                    <CardItem key={item.id} product={item} />
+                    <CartItem key={item.id} product={item} />
                   ))}
                 </Box>
-                <OrderSummary />
+                <Stack w="full">
+                  <Flex align="center" justify="space-between">
+                    <Heading as="h4" size="md">
+                      Subtotal
+                    </Heading>
+                    <Text>${subTotal}</Text>
+                  </Flex>
+
+                  <Button variant="brand">
+                    <NextLink href="/finalizar-compra" passHref>
+                      <Link w="full" py={2}>
+                        Finalizar Compra
+                      </Link>
+                    </NextLink>
+                  </Button>
+                </Stack>
               </Flex>
             ) : (
-              <p>Carrito vacio</p>
+              <VStack spacing={10}>
+                <Text>Carrito vacio</Text>
+                <Button onClick={onClose} variant="brand">
+                  Continuar compra
+                </Button>
+              </VStack>
             )}
           </DrawerBody>
         </DrawerContent>

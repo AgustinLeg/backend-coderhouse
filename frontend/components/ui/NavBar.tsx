@@ -3,7 +3,7 @@ import { Flex, HStack, SimpleGrid, Link, Button } from "@chakra-ui/react";
 
 // import { RiShoppingBag3Line, RiUser3Line } from "react-icons/ri";
 import { AiOutlineHeart } from "react-icons/ai";
-import {CartList} from "../cart";
+import { CartList } from "../cart";
 import UserMenu from "./UserMenu";
 
 export const NavBar = () => {

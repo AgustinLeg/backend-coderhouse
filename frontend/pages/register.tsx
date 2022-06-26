@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
 import NextLink from "next/link";
 import {
-  Flex,
   Box,
   FormControl,
   FormLabel,
@@ -16,13 +15,16 @@ import {
   InputGroup,
   InputRightElement,
   FormErrorMessage,
-  useToast,
+  Alert,
+  AlertIcon,
+  AlertDescription,
 } from "@chakra-ui/react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 import { AuthContext } from "../context";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import { ShopLayout } from "../components/layouts";
 
 interface FormData {
   name: string;
@@ -35,36 +37,23 @@ export default function Register() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>();
   const { registerUser } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
-  const toast = useToast({
-    duration: 3000,
-    isClosable: true,
-    position: "top",
-  });
+  const [error, setError] = useState(false);
   const router = useRouter();
 
-  const onSubmit = async (data: FormData) => {
-    const isValidRegister = await registerUser(data);
-    if (!isValidRegister) {
-      return toast({
-        title: "Error",
-        description: "Invalid email or password",
-        status: "error",
-      });
+  const handleRegister = async (data: FormData) => {
+    setError(false);
+    const resp = await registerUser(data);
+    if (!resp) {
+      return setError(true);
     }
-    router.push("/");
+    router.replace("/");
   };
-
   return (
-    <Flex
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
-    >
+    <ShopLayout>
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
           <Heading fontSize={"4xl"} textAlign={"center"}>
@@ -80,7 +69,22 @@ export default function Register() {
           boxShadow={"lg"}
           p={8}
         >
-          <Stack as="form" onSubmit={handleSubmit(onSubmit)} spacing={4}>
+          {error && (
+            <Alert status="error">
+              <AlertIcon />
+              <AlertDescription>
+                Se ha producido un problema al iniciar sesión. Comprueba el
+                correo electrónico y la contraseña o crea una cuenta.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <Stack
+            as="form"
+            onSubmit={handleSubmit(handleRegister)}
+            spacing={4}
+            mt={5}
+          >
             <HStack>
               <Box>
                 <FormControl isInvalid={!!errors.name} isRequired>
@@ -169,30 +173,21 @@ export default function Register() {
               )}
             </FormControl>
             <Stack spacing={10} pt={2}>
-              <Button
-                loadingText="Submitting"
-                size="lg"
-                bg={"blue.400"}
-                color={"white"}
-                _hover={{
-                  bg: "blue.500",
-                }}
-                type="submit"
-              >
-                Sign up
+              <Button variant="brand" isLoading={isSubmitting} type="submit">
+                Crear Cuenta
               </Button>
             </Stack>
             <Stack pt={6}>
               <Text align={"center"}>
-                Already a user?{" "}
+                Ya tienes una cuenta?{" "}
                 <NextLink href="/login" passHref>
-                  <Link color={"blue.400"}>Login</Link>
+                  <Link color={"blue.400"}>Iniciar Sesion</Link>
                 </NextLink>
               </Text>
             </Stack>
           </Stack>
         </Box>
       </Stack>
-    </Flex>
+    </ShopLayout>
   );
 }

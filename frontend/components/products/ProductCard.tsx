@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import NextLink from "next/link";
 import {
   Flex,
@@ -6,46 +6,66 @@ import {
   Image,
   LinkBox,
   LinkOverlay,
-  Text,
   Button,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { AiOutlineHeart } from "react-icons/ai";
 
 import { IProduct } from "../../interfaces";
+import { CartContext } from "../../context";
 
 interface Props {
   product: IProduct;
 }
 
 export const ProductCard: FC<Props> = ({ product }) => {
+  const { addProductToCart } = useContext(CartContext);
+
   return (
-    <LinkBox as="article" position="relative" cursor="pointer">
-      <Image
-        src={product.images[0]}
-        alt={`Picture of ${product.name}`}
-        w="full"
-      />
-      <Flex mt="1" justifyContent="space-between" alignContent="center">
-        <Box>
+    <LinkBox
+      p={5}
+      w="full"
+      maxW="350px"
+      m="10px"
+      alignItems="center"
+      display="flex"
+      justifyContent="space-between"
+      flexDirection="column"
+      bg={useColorModeValue("white", "gray.800")}
+      borderWidth="1px"
+      rounded="lg"
+      shadow="lg"
+    >
+      <Box h="60%">
+        <Image
+          m="auto"
+          src={product.images[0]}
+          alt={`Picture of ${product.title}`}
+          roundedTop="lg"
+          h="full"
+          objectFit="cover"
+        />
+      </Box>
+      <Box>
+        <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
           <NextLink href={`/producto/${product.slug}`} passHref>
-            <LinkOverlay as="h4" fontSize="lg" fontWeight="bold">
-              {product.name}
+            <LinkOverlay fontSize="lg" fontWeight="bold">
+              {product.title}
             </LinkOverlay>
           </NextLink>
-          <Text as="span" fontSize="sm" color="gray.500">
-            {product.description}
-          </Text>
-          <Text fontSize="sm" fontWeight="bold">
-            <Text as="span" color={"gray.600"}>
-              $
-            </Text>
-            {Number(product.price).toFixed(2)}
-          </Text>
         </Box>
-        <Button variant="ghost" p={0}>
-          <AiOutlineHeart size={25} />
-        </Button>
-      </Flex>
+
+        <Flex justifyContent="space-between" alignContent="center">
+          <Box fontSize="2xl" color={useColorModeValue("gray.800", "white")}>
+            <Box as="span" color={"gray.600"} fontSize="lg">
+              $
+            </Box>
+            {product.price}
+          </Box>
+        </Flex>
+      </Box>
+      <Button w="full" onClick={() => addProductToCart(product)}>
+        Agregar al carrito
+      </Button>
     </LinkBox>
   );
 };

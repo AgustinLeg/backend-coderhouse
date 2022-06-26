@@ -1,28 +1,27 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
-  Flex,
   Box,
   FormControl,
   FormLabel,
   Input,
-  Checkbox,
   Stack,
   Link,
   Button,
   Heading,
   Text,
-  useColorModeValue,
   Center,
   FormErrorMessage,
   InputGroup,
   InputRightElement,
-  toast,
-  useToast,
+  Alert,
+  AlertIcon,
+  AlertDescription,
 } from "@chakra-ui/react";
-import { useAuthContext } from "../context";
 import NextLink from "next/link";
 import { useForm } from "react-hook-form";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { ShopLayout } from "../components/layouts/ShopLayout";
+import { AuthContext } from "../context";
 import { useRouter } from "next/router";
 
 interface FormData {
@@ -34,36 +33,25 @@ export default function Login() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>();
   const [showPassword, setShowPassword] = useState(false);
-  const { loginUser } = useAuthContext();
+  const [error, setError] = useState(false);
   const router = useRouter();
-  const toast = useToast({
-    duration: 3000,
-    isClosable: true,
-    position: "top",
-  });
 
-  const onSubmit = async (data: FormData) => {
-    const isValidLogin = await loginUser(data.email, data.password);
-    if (!isValidLogin) {
-      return toast({
-        title: "Error",
-        description: "Invalid email or password",
-        status: "error",
-      });
+  const { loginUser } = useContext(AuthContext);
+
+  const handleLogin = async (data: FormData) => {
+    setError(false);
+    const resp = await loginUser(data.email, data.password);
+    if (!resp) {
+      return setError(true);
     }
-    router.push("/");
+    router.replace("/");
   };
 
   return (
-    <Flex
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
-    >
+    <ShopLayout>
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
           <Heading fontSize={"4xl"}>Sign in to your account</Heading>
@@ -71,22 +59,33 @@ export default function Login() {
             to enjoy all of our cool <Link color={"blue.400"}>features</Link> ✌️
           </Text>
         </Stack>
-        <Box
-          rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
-          boxShadow={"lg"}
-          p={8}
-        >
-          <Stack as="form" onSubmit={handleSubmit(onSubmit)} spacing={5}>
+
+        <Box rounded={"lg"} boxShadow={"lg"} p={8}>
+          {error && (
+            <Alert status="error">
+              <AlertIcon />
+              <AlertDescription>
+                Se ha producido un problema al iniciar sesión. Comprueba el
+                correo electrónico y la contraseña o crea una cuenta.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <Stack
+            as="form"
+            onSubmit={handleSubmit(handleLogin)}
+            spacing={5}
+            mt={5}
+          >
             <FormControl isInvalid={!!errors.email} isRequired>
               <FormLabel>Email address</FormLabel>
               <Input
                 type="text"
                 {...register("email", {
-                  required: "Email is required",
+                  required: "Este campo es requerido",
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "invalid email address",
+                    message: "Porfavor ingrese un email valido",
                   },
                 })}
               />
@@ -100,10 +99,10 @@ export default function Login() {
                 <Input
                   type={showPassword ? "text" : "password"}
                   {...register("password", {
-                    required: "Password is required",
+                    required: "Este campo es requerido",
                     minLength: {
                       value: 6,
-                      message: "Password must be at least 6 characters",
+                      message: "Minimo 6 caracteres",
                     },
                   })}
                 />
@@ -130,30 +129,23 @@ export default function Login() {
                 align={"start"}
                 justify={"space-between"}
               >
-                <Checkbox>Remember me</Checkbox>
                 <Link color={"blue.400"}>Forgot password?</Link>
               </Stack>
-              <Button
-                bg={"blue.400"}
-                color={"white"}
-                _hover={{
-                  bg: "blue.500",
-                }}
-                type="submit"
-              >
-                Sign in
+
+              <Button variant="brand" type="submit" isLoading={isSubmitting}>
+                Iniciar Sesion
               </Button>
             </Stack>
           </Stack>
           <Center mt={5}>
             <NextLink href="/register" passHref>
               <Link textAlign="center" w="full" color={"blue.400"}>
-                Create Account
+                Crear cuenta
               </Link>
             </NextLink>
           </Center>
         </Box>
       </Stack>
-    </Flex>
+    </ShopLayout>
   );
 }

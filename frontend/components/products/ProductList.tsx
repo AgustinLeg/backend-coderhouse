@@ -1,7 +1,9 @@
 import { FC } from "react";
+import { Grid } from "@chakra-ui/react";
+
 import { ProductCard } from "./";
+
 import { IProduct } from "../../interfaces";
-import { Grid, GridItem } from "@chakra-ui/react";
 
 interface Props {
   products: IProduct[];

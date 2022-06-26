@@ -1,9 +1,7 @@
-import { IProduct } from ".";
-
 export interface ICartProduct {
   id: string;
-  name: string;
-  image: string;
+  title: string;
+  images: string[];
   timestamp: string;
   price: number;
   quantity: number;
