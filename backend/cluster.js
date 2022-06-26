@@ -1,38 +1,38 @@
-const express = require('express')
-const cluster = require('cluster')
-const numCPU = require('os').cpus().length
-const randomRoute = require('./routes/randomRoute')
-const infoRoute = require('./routes/info')
+import cluster from 'cluster'
+import { cpus } from 'os'
+import app from './src/app.js'
+import { DB } from './src/database/index.js'
+import logger from './src/utils/logger.js'
 
-const app = express()
-
-app.get('/', (req, res) => {
-  res.send(`
-      <h1>Express server</h1>
-      <h2>process - ${process.pid} en puerto 8080 usando cluster nativo</h2>
-      <h4>estamos en master</h4>
-   `)
-})
-
-app.use('/api/random', randomRoute)
-app.use('/info', infoRoute)
+const numCPUs = cpus().length
 
 if (cluster.isMaster) {
-  console.log(`Master ${process.pid} is running`)
-  app.listen(8080, () => {
-    console.log('escuchando en el puerto 8080')
-  })
-  for (let i = 0; i < numCPU; i++) {
+  logger.info(`Master ${process.pid} is running`)
+  for (let i = 0; i < numCPUs; i++) {
     cluster.fork()
   }
-  cluster.on('exit', (worker, code, signal) => {
-    console.log(`worker ${worker.id} died`)
+  cluster.on('exit', (worker, _code, _signal) => {
+    logger.info(`Worker ${worker.process.pid} died`)
     cluster.fork()
   })
 } else {
-  app.listen(8081, () => {
-    console.log(
-      `server iniciado puerto 8081, $worker ${cluster.worker.id} - PID: ${process.pid}`
-    )
-  })
+  try {
+    app.listen(app.get('port'), async () => {
+      // connect to database
+      try {
+        await DB.connect()
+      } catch (error) {
+        logger.error(`error ${error}`)
+      }
+
+      logger.info(
+        '🚀 Server started on http://localhost:%d in %s mode',
+        app.get('port'),
+        app.get('env')
+      )
+      logger.info('  Press CTRL-C to stop\n')
+    })
+  } catch (error) {
+    logger.error(`error ${error}`)
+  }
 }

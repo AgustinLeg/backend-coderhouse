@@ -1,0 +1,213 @@
+Statistical profiling result from ./isolate-0x140008000-44948-v8.log, (53 ticks, 0 unaccounted, 0 excluded).
+
+ [Shared libraries]:
+   ticks  total  nonlib   name
+      4    7.5%          /usr/lib/system/libsystem_pthread.dylib
+      4    7.5%          /usr/lib/system/libsystem_c.dylib
+      2    3.8%          /usr/lib/system/libsystem_kernel.dylib
+      1    1.9%          /usr/lib/system/libsystem_malloc.dylib
+      1    1.9%          /usr/lib/libc++.1.dylib
+
+ [JavaScript]:
+   ticks  total  nonlib   name
+
+ [C++]:
+   ticks  total  nonlib   name
+     28   52.8%   68.3%  t node::fs::LStat(v8::FunctionCallbackInfo<v8::Value> const&)
+      5    9.4%   12.2%  T __kernelrpc_mach_port_move_member_trap
+      4    7.5%    9.8%  T _sigprocmask
+      1    1.9%    2.4%  t std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> > std::__1::__pad_and_output<char, std::__1::char_traits<char> >(std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> >, char const*, char const*, char const*, std::__1::ios_base&, char)
+      1    1.9%    2.4%  t std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long)
+      1    1.9%    2.4%  t node::fs::OpenFileHandle(v8::FunctionCallbackInfo<v8::Value> const&)
+      1    1.9%    2.4%  T _mach_port_insert_right
+
+ [Summary]:
+   ticks  total  nonlib   name
+      0    0.0%    0.0%  JavaScript
+     41   77.4%  100.0%  C++
+      0    0.0%    0.0%  GC
+     12   22.6%          Shared libraries
+
+ [C++ entry points]:
+   ticks    cpp   total   name
+     26   78.8%   49.1%  t node::fs::LStat(v8::FunctionCallbackInfo<v8::Value> const&)
+      2    6.1%    3.8%  T _sigprocmask
+      2    6.1%    3.8%  T __kernelrpc_mach_port_move_member_trap
+      1    3.0%    1.9%  t std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> > std::__1::__pad_and_output<char, std::__1::char_traits<char> >(std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> >, char const*, char const*, char const*, std::__1::ios_base&, char)
+      1    3.0%    1.9%  t std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long)
+      1    3.0%    1.9%  t node::fs::OpenFileHandle(v8::FunctionCallbackInfo<v8::Value> const&)
+
+ [Bottom up (heavy) profile]:
+  Note: percentage shows a share of a particular caller in the total
+  amount of its parent calls.
+  Callers occupying less than 1.0% are not shown.
+
+   ticks parent  name
+     28   52.8%  t node::fs::LStat(v8::FunctionCallbackInfo<v8::Value> const&)
+     11   39.3%    Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+     11  100.0%      Function: ^nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      2   18.2%        LazyCompile: ~initializeCJSLoader node:internal/bootstrap/pre_execution:414:29
+      2  100.0%          LazyCompile: ~prepareMainThreadExecution node:internal/bootstrap/pre_execution:22:36
+      2  100.0%            Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      2   18.2%        Function: ~<anonymous> node:internal/process/esm_loader:1:1
+      2  100.0%          Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      2  100.0%            Function: ^nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      2   18.2%        Function: ~<anonymous> node:internal/modules/esm/loader:1:1
+      2  100.0%          Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      2  100.0%            Function: ^nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1    9.1%        LazyCompile: ~setupChannel node:internal/child_process:571:22
+      1  100.0%          LazyCompile: ~_forkChild node:child_process:169:20
+      1  100.0%            LazyCompile: ~setupChildProcessIpcChannel node:internal/bootstrap/pre_execution:330:37
+      1    9.1%        LazyCompile: ~initializeSourceMapsHandlers node:internal/bootstrap/pre_execution:453:38
+      1  100.0%          LazyCompile: ~prepareMainThreadExecution node:internal/bootstrap/pre_execution:22:36
+      1  100.0%            Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1    9.1%        Function: ~<anonymous> node:internal/modules/esm/module_map:1:1
+      1  100.0%          Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%            Function: ^nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1    9.1%        Function: ~<anonymous> node:internal/modules/esm/get_source:1:1
+      1  100.0%          Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%            Function: ^nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1    9.1%        Function: ~<anonymous> node:internal/fs/promises:1:1
+      1  100.0%          Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%            Function: ^nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      8   28.6%    LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      8  100.0%      LazyCompile: ~nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      3   37.5%        Function: ~<anonymous> node:internal/child_process:1:1
+      3  100.0%          LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      3  100.0%            LazyCompile: ~nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      2   25.0%        LazyCompile: ~setupChildProcessIpcChannel node:internal/bootstrap/pre_execution:330:37
+      2  100.0%          LazyCompile: ~prepareMainThreadExecution node:internal/bootstrap/pre_execution:22:36
+      2  100.0%            Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1   12.5%        Function: ~<anonymous> node:net:1:1
+      1  100.0%          LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%            LazyCompile: ~nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1   12.5%        Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1   12.5%        Function: ~<anonymous> node:child_process:1:1
+      1  100.0%          LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%            LazyCompile: ~nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1    3.6%    LazyCompile: ~toString node:buffer:783:46
+      1  100.0%      LazyCompile: ~decode node:internal/encoding:408:11
+      1  100.0%        LazyCompile: ~stringify node:internal/modules/esm/translators:90:19
+      1  100.0%          LazyCompile: ~moduleStrategy node:internal/modules/esm/translators:110:56
+      1  100.0%            LazyCompile: ~moduleProvider node:internal/modules/esm/loader:279:28
+      1    3.6%    LazyCompile: ~resolveMainPath node:internal/modules/run_main:15:25
+      1  100.0%      LazyCompile: ~executeUserEntryPoint node:internal/modules/run_main:70:31
+      1  100.0%        Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1    3.6%    LazyCompile: ~realpathSync node:fs:2412:22
+      1  100.0%      LazyCompile: ~toRealPath node:internal/modules/cjs/loader:393:20
+      1  100.0%        LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
+      1  100.0%          LazyCompile: ~resolveMainPath node:internal/modules/run_main:15:25
+      1  100.0%            LazyCompile: ~executeUserEntryPoint node:internal/modules/run_main:70:31
+      1    3.6%    LazyCompile: ~pathToFileURL node:internal/url:1455:23
+      1  100.0%      LazyCompile: ~<anonymous> node:internal/modules/run_main:51:29
+      1  100.0%        LazyCompile: ~loadESM node:internal/process/esm_loader:85:41
+      1  100.0%          t node::fs::LStat(v8::FunctionCallbackInfo<v8::Value> const&)
+      1  100.0%            t node::fs::LStat(v8::FunctionCallbackInfo<v8::Value> const&)
+      1    3.6%    LazyCompile: ~finalizeResolution node:internal/modules/esm/resolve:391:28
+      1  100.0%      LazyCompile: ~moduleResolve node:internal/modules/esm/resolve:966:23
+      1  100.0%        LazyCompile: ~defaultResolve node:internal/modules/esm/resolve:1039:24
+      1  100.0%          LazyCompile: ~resolve node:internal/modules/esm/loader:509:16
+      1  100.0%            LazyCompile: ~getModuleJob node:internal/modules/esm/loader:242:21
+      1    3.6%    Function: ~<anonymous> node:internal/fs/rimraf:1:1
+      1  100.0%      Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%        Function: ^nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1  100.0%          Function: ~<anonymous> node:internal/fs/promises:1:1
+      1  100.0%            Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+
+      5    9.4%  T __kernelrpc_mach_port_move_member_trap
+      1   20.0%    LazyCompile: ~<anonymous> node:path:1082:10
+      1  100.0%      LazyCompile: ~resolve node:path:1091:10
+      1  100.0%        LazyCompile: ~patchProcessObject node:internal/bootstrap/pre_execution:81:28
+      1  100.0%          LazyCompile: ~prepareMainThreadExecution node:internal/bootstrap/pre_execution:22:36
+      1  100.0%            Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1   20.0%    Function: ~<anonymous> node:dgram:1:1
+      1  100.0%      LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%        LazyCompile: ~nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1  100.0%          Function: ~<anonymous> node:internal/child_process:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+
+      4    7.5%  T _sigprocmask
+      1   25.0%    LazyCompile: ~toRealPath node:internal/modules/cjs/loader:393:20
+      1  100.0%      LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
+      1  100.0%        LazyCompile: ~resolveMainPath node:internal/modules/run_main:15:25
+      1  100.0%          LazyCompile: ~executeUserEntryPoint node:internal/modules/run_main:70:31
+      1  100.0%            Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1   25.0%    LazyCompile: ~addListener node:events:622:58
+      1  100.0%      LazyCompile: ~setupWarningHandler node:internal/bootstrap/pre_execution:134:29
+      1  100.0%        LazyCompile: ~prepareMainThreadExecution node:internal/bootstrap/pre_execution:22:36
+      1  100.0%          Function: ~<anonymous> node:internal/main/run_main_module:1:1
+
+      4    7.5%  /usr/lib/system/libsystem_pthread.dylib
+      1   25.0%    LazyCompile: ~toRealPath node:internal/modules/cjs/loader:393:20
+      1  100.0%      LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
+      1  100.0%        LazyCompile: ~resolveMainPath node:internal/modules/run_main:15:25
+      1  100.0%          LazyCompile: ~executeUserEntryPoint node:internal/modules/run_main:70:31
+      1  100.0%            Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1   25.0%    LazyCompile: ~setupWarningHandler node:internal/bootstrap/pre_execution:134:29
+      1  100.0%      LazyCompile: ~prepareMainThreadExecution node:internal/bootstrap/pre_execution:22:36
+      1  100.0%        Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1   25.0%    LazyCompile: ~patchProcessObject node:internal/bootstrap/pre_execution:81:28
+      1  100.0%      LazyCompile: ~prepareMainThreadExecution node:internal/bootstrap/pre_execution:22:36
+      1  100.0%        Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1   25.0%    Function: ~<anonymous> node:internal/fs/promises:1:1
+      1  100.0%      Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%        Function: ^nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1  100.0%          Function: ~<anonymous> node:internal/modules/esm/get_source:1:1
+      1  100.0%            Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+
+      4    7.5%  /usr/lib/system/libsystem_c.dylib
+      1   25.0%    LazyCompile: ~realpathSync node:fs:2412:22
+      1  100.0%      LazyCompile: ~toRealPath node:internal/modules/cjs/loader:393:20
+      1  100.0%        LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
+      1  100.0%          LazyCompile: ~resolveMainPath node:internal/modules/run_main:15:25
+      1  100.0%            LazyCompile: ~executeUserEntryPoint node:internal/modules/run_main:70:31
+      1   25.0%    LazyCompile: ~patchProcessObject node:internal/bootstrap/pre_execution:81:28
+      1  100.0%      LazyCompile: ~prepareMainThreadExecution node:internal/bootstrap/pre_execution:22:36
+      1  100.0%        Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1   25.0%    LazyCompile: ~nextTick node:internal/process/task_queues:104:18
+      1  100.0%      LazyCompile: ~<anonymous> node:internal/child_process:706:36
+      1  100.0%        LazyCompile: ~emit node:events:474:44
+      1  100.0%          LazyCompile: ~_addListener node:events:554:22
+      1  100.0%            LazyCompile: ~addListener node:events:622:58
+      1   25.0%    LazyCompile: ~<anonymous> node:internal/per_context/primordials:412:15
+      1  100.0%      t node::fs::LStat(v8::FunctionCallbackInfo<v8::Value> const&)
+      1  100.0%        LazyCompile: ~primordials.SafePromisePrototypeFinally node:internal/per_context/primordials:409:43
+      1  100.0%          LazyCompile: ~readFile node:internal/fs/promises:786:24
+      1  100.0%            t node::fs::LStat(v8::FunctionCallbackInfo<v8::Value> const&)
+
+      2    3.8%  /usr/lib/system/libsystem_kernel.dylib
+
+      1    1.9%  t std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> > std::__1::__pad_and_output<char, std::__1::char_traits<char> >(std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> >, char const*, char const*, char const*, std::__1::ios_base&, char)
+      1  100.0%    Function: ~<anonymous> node:internal/fs/rimraf:1:1
+      1  100.0%      Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%        Function: ^nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1  100.0%          Function: ~<anonymous> node:internal/fs/promises:1:1
+      1  100.0%            Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+
+      1    1.9%  t std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long)
+      1  100.0%    LazyCompile: ~realpathSync node:fs:2412:22
+      1  100.0%      LazyCompile: ~toRealPath node:internal/modules/cjs/loader:393:20
+      1  100.0%        LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
+      1  100.0%          LazyCompile: ~resolveMainPath node:internal/modules/run_main:15:25
+      1  100.0%            LazyCompile: ~executeUserEntryPoint node:internal/modules/run_main:70:31
+
+      1    1.9%  t node::fs::OpenFileHandle(v8::FunctionCallbackInfo<v8::Value> const&)
+      1  100.0%    LazyCompile: ~open node:internal/fs/promises:449:20
+      1  100.0%      LazyCompile: ~readFile node:internal/fs/promises:786:24
+      1  100.0%        LazyCompile: ~defaultGetSource node:internal/modules/esm/get_source:25:32
+      1  100.0%          LazyCompile: ~defaultLoad node:internal/modules/esm/load:13:27
+      1  100.0%            LazyCompile: ~load node:internal/modules/esm/loader:353:13
+
+      1    1.9%  T _mach_port_insert_right
+
+      1    1.9%  /usr/lib/system/libsystem_malloc.dylib
+      1  100.0%    Function: ~<anonymous> node:internal/modules/cjs/helpers:1:1
+      1  100.0%      Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%        Function: ^nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1  100.0%          Function: ~<anonymous> node:internal/source_map/source_map_cache:1:1
+      1  100.0%            Function: ^compileForInternalLoader node:internal/bootstrap/loaders:299:27
+
+      1    1.9%  /usr/lib/libc++.1.dylib
+      1  100.0%    LazyCompile: ~prepareMainThreadExecution node:internal/bootstrap/pre_execution:22:36
+      1  100.0%      Function: ~<anonymous> node:internal/main/run_main_module:1:1
+
