@@ -40,6 +40,8 @@ export const createOrder = async (req, res) => {
     const newOrder = new Order({ ...req.body, isPaid: false, user: user._id })
     newOrder.total = Math.round(newOrder.total * 100) / 100
 
+    console.log(newOrder)
+
     await newOrder.save()
 
     await mailNuevaVenta(newOrder)

@@ -8,7 +8,6 @@ import {
   Link,
   Button,
   Heading,
-  Text,
   Center,
   FormErrorMessage,
   InputGroup,
@@ -41,26 +40,24 @@ export default function Login() {
 
   const { loginUser } = useContext(AuthContext);
 
+  const next = (router.query.next as string) || "/";
   const handleLogin = async (data: FormData) => {
     setError(false);
     const resp = await loginUser(data.email, data.password);
     if (!resp) {
       return setError(true);
     }
-    router.replace("/");
+    router.replace(next);
   };
 
   return (
     <ShopLayout>
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-        <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Sign in to your account</Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
-            to enjoy all of our cool <Link color={"blue.400"}>features</Link> ✌️
-          </Text>
-        </Stack>
+      <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
+        <Heading fontSize="4xl" textAlign="center">
+          Iniciar Sesion
+        </Heading>
 
-        <Box rounded={"lg"} boxShadow={"lg"} p={8}>
+        <Box rounded="lg" boxShadow="lg" p={8}>
           {error && (
             <Alert status="error">
               <AlertIcon />
@@ -106,7 +103,7 @@ export default function Login() {
                     },
                   })}
                 />
-                <InputRightElement h={"full"}>
+                <InputRightElement h="full">
                   <Button
                     fontSize="20px"
                     size="xl"
@@ -126,10 +123,10 @@ export default function Login() {
             <Stack spacing={10}>
               <Stack
                 direction={{ base: "column", sm: "row" }}
-                align={"start"}
-                justify={"space-between"}
+                align="start"
+                justify="space-between"
               >
-                <Link color={"blue.400"}>Forgot password?</Link>
+                <Link color="blue.400">Forgot password?</Link>
               </Stack>
 
               <Button variant="brand" type="submit" isLoading={isSubmitting}>
@@ -138,8 +135,11 @@ export default function Login() {
             </Stack>
           </Stack>
           <Center mt={5}>
-            <NextLink href="/register" passHref>
-              <Link textAlign="center" w="full" color={"blue.400"}>
+            <NextLink
+              href={`/register${next && `?next=%2F${next.slice(1)}`}`}
+              passHref
+            >
+              <Link textAlign="center" w="full" color="blue.400">
                 Crear cuenta
               </Link>
             </NextLink>

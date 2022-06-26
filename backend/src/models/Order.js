@@ -17,6 +17,7 @@ const orderSchema = new Schema(
     shippingAddress: {
       name: { type: String },
       lastName: { type: String },
+      email: { type: String },
       address: { type: String, required: true },
       address2: { type: String },
       zip: { type: String },

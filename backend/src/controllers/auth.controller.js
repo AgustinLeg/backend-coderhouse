@@ -76,3 +76,21 @@ export const register = async (req, res) => {
       .send({ error: 'Error al crear usuario', status: 500 })
   }
 }
+
+export const CheckUser = async (req, res) => {
+  try {
+    const user = jwt.isValidToken(req.token, process.env.JWT_SECRET_SEED)
+    if (!user) {
+      return res.status(403).json({
+        message: 'No tienes permiso',
+      })
+    }
+    const userDB = await User.findById(user._id)
+    return res.status(200).json(userDB)
+  } catch (error) {
+    logger.error({ error })
+    return res.status(500).json({
+      message: 'ERROR',
+    })
+  }
+}

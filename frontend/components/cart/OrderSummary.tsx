@@ -16,8 +16,7 @@ import {
 import { useContext, useState } from "react";
 import { AuthContext, CartContext } from "../../context";
 import { useForm } from "react-hook-form";
-import shopApi from "../../api";
-import Cookies from "js-cookie";
+
 import { useRouter } from "next/router";
 
 interface FormData {
@@ -30,7 +29,7 @@ interface FormData {
 
 export const OrderSummary = () => {
   const { user } = useContext(AuthContext);
-  const { subTotal, cart, clearCart } = useContext(CartContext);
+  const { total, createOrder } = useContext(CartContext);
   const {
     register,
     handleSubmit,
@@ -46,32 +45,18 @@ export const OrderSummary = () => {
   const router = useRouter();
   const [error, setError] = useState(false);
 
-  const handleCheckout = async (form: FormData) => {
-    const data = {
-      orderItems: cart,
-      total: subTotal,
-      shippingAddress: {
-        ...form,
-      },
-      numberOfItems: cart.length,
-    };
-
-    console.log(data);
-    const token = Cookies.get("token");
-    try {
-      await shopApi.post("/order", data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      clearCart();
-      toast({
-        status: "success",
-        title: "Gracias por tu compra",
-      });
-      router.replace("/");
-    } catch (error) {
-      setError(true);
+  const handleCheckout = async (data: FormData) => {
+    const resp = await createOrder(data);
+    if (resp.hasError) {
+      return setError(true);
     }
+
+    toast({
+      status: "success",
+      title: "Gracias por tu compra",
+    });
+
+    router.push("/");
   };
 
   return (
@@ -158,9 +143,9 @@ export const OrderSummary = () => {
       <Stack spacing={10} pt={2}>
         <HStack pt={6} justify="space-between">
           <Heading as="h4" size="md">
-            Subtotal
+            Total
           </Heading>
-          <Text>${subTotal}</Text>
+          <Text>${total}</Text>
         </HStack>
         <Button variant="brand" isLoading={isSubmitting} type="submit">
           Finalizar Compra

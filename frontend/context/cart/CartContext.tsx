@@ -6,8 +6,6 @@ interface ContextProps {
   isLoaded: boolean;
   cart: ICartProduct[];
   numberOfItems: number;
-  subTotal: number;
-  tax: number;
   total: number;
 
   // Methods
@@ -17,7 +15,13 @@ interface ContextProps {
   clearCart: () => void;
 
   // Orders
-  createOrder: () => Promise<{ hasError: boolean; message: string }>;
+  createOrder: (formData: {
+    name: string;
+    lastName: string;
+    email: string;
+    address: string;
+    phone: string;
+  }) => Promise<{ hasError: boolean; message: string }>;
 }
 
 export const CartContext = createContext({} as ContextProps);

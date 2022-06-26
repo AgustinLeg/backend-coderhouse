@@ -1,17 +1,19 @@
-import React, { FC, useReducer } from "react";
+import React, { FC, useEffect, useReducer } from "react";
 import { AuthContext, authReducer } from "./";
 import { IUser, UserData } from "../../interfaces";
-import Cookies from "js-cookie";
+import Cookie from "js-cookie";
 import shopApi from "../../api";
 
 export interface AuthState {
   user: IUser | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
 }
 
 const INITIAL_AUTH_STATE = {
   user: null,
   isAuthenticated: false,
+  isLoading: true,
 };
 
 interface Props {
@@ -20,6 +22,26 @@ interface Props {
 
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, INITIAL_AUTH_STATE);
+
+  useEffect(() => {
+    const token = Cookie.get("token");
+    const checkUser = async () => {
+      const response = await shopApi.post(
+        "/auth/user",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.status === 200) {
+        return dispatch({ type: "[Auth] - Login", payload: response.data });
+      }
+    };
+    checkUser();
+    return () => {
+      dispatch({ type: "[Auth] - Logout" });
+    };
+  }, []);
 
   const loginUser = async (
     email: string,
@@ -37,7 +59,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
       const { token, user } = response.data;
 
-      Cookies.set("token", token);
+      Cookie.set("token", token);
       dispatch({ type: "[Auth] - Login", payload: user });
       return true;
     } catch (error) {
@@ -47,7 +69,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
   };
 
   const logoutUser = () => {
-    Cookies.remove("token", { path: "" });
+    Cookie.remove("token", { path: "" });
     dispatch({ type: "[Auth] - Logout" });
   };
 
@@ -64,7 +86,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       const { token, user } = response.data;
 
       if (!response) return false;
-      Cookies.set("token", token);
+      Cookie.set("token", token);
       dispatch({ type: "[Auth] - Login", payload: user });
       return true;
     } catch (error) {

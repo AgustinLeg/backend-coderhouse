@@ -17,20 +17,43 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { RiShoppingBag3Line } from "react-icons/ri";
-import { CartContext } from "../../context";
+import { AuthContext, CartContext } from "../../context";
 import { CartItem } from ".";
 import NextLink from "next/link";
 
 export const CartList = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { cart, subTotal } = useContext(CartContext);
+  const { cart, total, clearCart } = useContext(CartContext);
+  const { user } = useContext(AuthContext);
   const btnRef = useRef(null);
 
   return (
     <>
-      <Button ref={btnRef} variant="ghost" onClick={onOpen} p={0}>
+      <Button
+        ref={btnRef}
+        variant="ghost"
+        onClick={onOpen}
+        p={0}
+        position="relative"
+      >
         <RiShoppingBag3Line size={25} />
-        {cart.length > 0 && <Text fontSize="sm">{cart.length}</Text>}
+        {!!cart.length && (
+          <Box
+            position="absolute"
+            bg="brand"
+            color="white"
+            top={0}
+            right={0}
+            w={5}
+            h={5}
+            rounded="full"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Text fontSize="xs">{cart.length}</Text>
+          </Box>
+        )}
       </Button>
       <Drawer
         isOpen={isOpen}
@@ -56,16 +79,29 @@ export const CartList = () => {
                     <CartItem key={item.id} product={item} />
                   ))}
                 </Box>
-                <Stack w="full">
+                <Stack w="full" spacing={5}>
+                  <Button
+                    onClick={clearCart}
+                    variant="outline"
+                    colorScheme="red"
+                  >
+                    Vaciar carrito
+                  </Button>
                   <Flex align="center" justify="space-between">
                     <Heading as="h4" size="md">
                       Subtotal
                     </Heading>
-                    <Text>${subTotal}</Text>
+                    <Text>${total}</Text>
                   </Flex>
-
                   <Button variant="brand">
-                    <NextLink href="/finalizar-compra" passHref>
+                    <NextLink
+                      href={
+                        user
+                          ? "/finalizar-compra"
+                          : "/login?next=%2Ffinalizar-compra"
+                      }
+                      passHref
+                    >
                       <Link w="full" py={2}>
                         Finalizar Compra
                       </Link>

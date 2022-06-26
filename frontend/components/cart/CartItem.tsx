@@ -12,15 +12,16 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { RiDeleteBin7Line, RiAddFill, RiSubtractFill } from "react-icons/ri";
-import { ICartProduct } from "../../interfaces/cart";
 import { CartContext } from "../../context";
+import { ICartProduct } from "../../interfaces";
 
 interface Props {
   product: ICartProduct;
 }
 
 export const CartItem: FC<Props> = ({ product }) => {
-  const { removeCartProduct } = useContext(CartContext);
+  const { removeCartProduct, addProductToCart, updateCartQuantity } =
+    useContext(CartContext);
 
   return (
     <>
@@ -52,11 +53,23 @@ export const CartItem: FC<Props> = ({ product }) => {
             <IconButton
               aria-label="Subtract product"
               icon={<RiSubtractFill />}
+              onClick={() =>
+                updateCartQuantity({
+                  ...product,
+                  quantity: product.quantity - 1,
+                })
+              }
+              disabled={product.quantity === 1}
             />
             <Text w={16} textAlign="center">
               {product.quantity}
             </Text>
-            <IconButton aria-label="Add product" icon={<RiAddFill />} />
+            <IconButton
+              aria-label="Add product"
+              icon={<RiAddFill />}
+              onClick={() => addProductToCart(product)}
+              disabled={product.quantity === product.inStock}
+            />
           </ButtonGroup>
         </Flex>
         <Icon

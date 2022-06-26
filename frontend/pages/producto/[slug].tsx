@@ -12,10 +12,11 @@ import {
   Heading,
   SimpleGrid,
   useColorModeValue,
+  Spinner,
 } from "@chakra-ui/react";
 
 import { IProduct } from "../../interfaces/products";
-import {ShopLayout} from "../../components/layouts";
+import { ShopLayout } from "../../components/layouts";
 import { useContext } from "react";
 import { CartContext } from "../../context";
 
@@ -23,24 +24,34 @@ const ProductDetails = () => {
   const {
     query: { slug },
   } = useRouter();
-  const { products } = useProducts(`/productos/${slug}`) as {
+  const {
+    products: product,
+    isLoading,
+    isError,
+  } = useProducts(`/products/${slug}`) as {
     products: IProduct;
     isLoading: boolean;
-    isError: any
+    isError: any;
   };
-
-  const CartProduct = {...products, quantity: 1, timestamp: '2020-01-01'};
-
 
   const { addProductToCart } = useContext(CartContext);
 
-  const onAddProduct = () => {
-    addProductToCart(CartProduct);
-  };
-  
+  if (!isLoading && isError)
+    return (
+      <ShopLayout>
+        <Text>Hubo un error al obtener el producto</Text>
+      </ShopLayout>
+    );
+
+  const { title, price, images } = product;
   return (
     <ShopLayout>
-      <Container maxW={"7xl"}>
+      {isLoading && (
+        <Stack align="center" justify="center" w="100vw" h="100vh">
+          <Spinner />
+        </Stack>
+      )}
+      <Container maxW="7xl">
         <SimpleGrid
           columns={{ base: 1, lg: 2 }}
           spacing={{ base: 8, md: 10 }}
@@ -48,49 +59,35 @@ const ProductDetails = () => {
         >
           <Flex>
             <Image
-              rounded={"md"}
-              alt={"product image"}
-              src={products.image}
-              fit={"cover"}
-              align={"center"}
-              w={"100%"}
+              rounded="md"
+              alt="product image"
+              src={images ? images[0] : ""}
+              fit="cover"
+              align="center"
+              w="100%"
               h={{ base: "100%", sm: "400px", lg: "500px" }}
             />
           </Flex>
           <Stack spacing={{ base: 6, md: 10 }}>
-            <Box as={"header"}>
+            <Box as="header">
               <Heading
                 lineHeight={1.1}
                 fontWeight={600}
                 fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
               >
-                {products.name}
+                {title}
               </Heading>
               <Text
                 color={useColorModeValue("gray.900", "gray.400")}
                 fontWeight={300}
-                fontSize={"2xl"}
+                fontSize="2xl"
               >
-                ${products.price}
+                ${price}
               </Text>
             </Box>
 
-            <Button
-              rounded={"none"}
-              w={"full"}
-              mt={8}
-              size={"lg"}
-              py={"7"}
-              bg={useColorModeValue("gray.900", "gray.50")}
-              color={useColorModeValue("white", "gray.900")}
-              textTransform={"uppercase"}
-              _hover={{
-                transform: "translateY(2px)",
-                boxShadow: "lg",
-              }}
-              onClick={onAddProduct}
-            >
-              Add to cart
+            <Button variant="brand" onClick={() => addProductToCart(product)}>
+              Agregar al carrito
             </Button>
           </Stack>
         </SimpleGrid>

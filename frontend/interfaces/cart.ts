@@ -1,8 +1,5 @@
-export interface ICartProduct {
-  id: string;
-  title: string;
-  images: string[];
-  timestamp: string;
-  price: number;
+import { IProduct } from "./products";
+
+export interface ICartProduct extends IProduct {
   quantity: number;
 }

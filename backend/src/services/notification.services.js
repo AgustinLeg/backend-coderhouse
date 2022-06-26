@@ -85,7 +85,7 @@ const mailNuevaVenta = async ({
 const wpNuevaVenta = async ({ shippingAddress }) => {
   await wp(
     `Nuevo Pedido de ${shippingAddress.name} ${shippingAddress.lastName} Mail: ${shippingAddress.email}`,
-    `54${shippingAddress.phone}`
+    `549${shippingAddress.phone}`
   )
 }
 

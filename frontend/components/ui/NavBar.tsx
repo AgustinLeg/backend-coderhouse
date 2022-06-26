@@ -1,12 +1,14 @@
 import NextLink from "next/link";
-import { Flex, HStack, SimpleGrid, Link, Button } from "@chakra-ui/react";
+import { Flex, HStack, SimpleGrid, Link } from "@chakra-ui/react";
 
-// import { RiShoppingBag3Line, RiUser3Line } from "react-icons/ri";
-import { AiOutlineHeart } from "react-icons/ai";
 import { CartList } from "../cart";
 import UserMenu from "./UserMenu";
+import { useContext } from "react";
+import { AuthContext } from "../../context";
 
 export const NavBar = () => {
+  const { user } = useContext(AuthContext);
+
   return (
     <SimpleGrid
       columns={{ base: 3 }}
@@ -19,15 +21,21 @@ export const NavBar = () => {
       {/* NavBar links */}
       <Flex align="center" justify="center">
         <NextLink href="/" passHref>
-          <Link>Shop</Link>
+          <Link>Inicio</Link>
         </NextLink>
       </Flex>
       {/* Button actions for cart-favs-login */}
       <HStack gap={0}>
-        <UserMenu />
-        <Button variant="ghost" p={0} m={0}>
-          <AiOutlineHeart size={25} />
-        </Button>
+        {!user && (
+          <HStack>
+            <NextLink href="/login" passHref>
+              <Link bg="brand" color="white" p="4px 6px" rounded="sm">
+                Iniciar Sesion
+              </Link>
+            </NextLink>
+          </HStack>
+        )}
+        {user && <UserMenu />}
         <CartList />
       </HStack>
     </SimpleGrid>

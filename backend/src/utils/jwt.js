@@ -14,15 +14,16 @@ export const isValidToken = (token) => {
   if (!process.env.JWT_SECRET_SEED) {
     throw new Error('jwt secret key need')
   }
-  return new Promise()((resolve, reject) => {
-    try {
-      jwt.verify(token, process.env.JWT_SECRET_SEED || '', (err, payload) => {
-        if (err) return reject('JWT no válido')
-
-        resolve(payload)
-      })
-    } catch (error) {
-      reject('JWT no válido')
-    }
-  })
+  try {
+    return jwt.verify(
+      token,
+      process.env.JWT_SECRET_SEED || '',
+      (err, payload) => {
+        if (err) return false
+        return payload
+      }
+    )
+  } catch (error) {
+    return false
+  }
 }

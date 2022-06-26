@@ -3,13 +3,13 @@ import { ICartProduct } from "../../interfaces";
 import { CartContext } from "./";
 import { cartReducer } from "./cartReducer";
 import { IProduct } from "../../interfaces/products";
+import shopApi from "../../api";
+import Cookie from "js-cookie";
 
 export interface CartState {
   isLoaded: boolean;
   cart: ICartProduct[];
   numberOfItems: number;
-  subTotal: number;
-  tax: number;
   total: number;
 }
 
@@ -17,8 +17,6 @@ const CART_INITIAL_STATE: CartState = {
   isLoaded: false,
   cart: [],
   numberOfItems: 0,
-  subTotal: 0,
-  tax: 0,
   total: 0,
 };
 
@@ -29,26 +27,44 @@ interface Props {
 export const CartProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE);
 
+  // Efecto
+  useEffect(() => {
+    try {
+      const cookieProducts = Cookie.get("cart")
+        ? JSON.parse(Cookie.get("cart")!)
+        : [];
+      dispatch({
+        type: "[Cart] - LoadCart from cookies | storage",
+        payload: cookieProducts,
+      });
+    } catch (error) {
+      dispatch({
+        type: "[Cart] - LoadCart from cookies | storage",
+        payload: [],
+      });
+    }
+  }, []);
+
+  // actualizar cookie cart
+  useEffect(() => {
+    if (state.isLoaded) Cookie.set("cart", JSON.stringify(state.cart));
+  }, [state.cart]);
+
+  // actualizar total
   useEffect(() => {
     const numberOfItems = state.cart.reduce(
       (prev, current) => current.quantity + prev,
       0
     );
-    const subTotal = state.cart.reduce(
+    const total = state.cart.reduce(
       (prev, current) =>
         Number(current.price) * Number(current.quantity) + prev,
       0
     );
 
-    console.log(state.cart);
-
-    const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0);
-
     const orderSummary = {
       numberOfItems,
-      subTotal,
-      tax: subTotal * taxRate,
-      total: subTotal * (taxRate + 1),
+      total,
     };
 
     dispatch({ type: "[Cart] - Update order summary", payload: orderSummary });
@@ -81,10 +97,6 @@ export const CartProvider: FC<Props> = ({ children }) => {
     });
   };
 
-  const clearCart = () => {
-    dispatch({ type: "[Cart] - clear cart" });
-  };
-
   const updateCartQuantity = (product: ICartProduct) => {
     dispatch({ type: "[Cart] - Change cart quantity", payload: product });
   };
@@ -93,20 +105,33 @@ export const CartProvider: FC<Props> = ({ children }) => {
     dispatch({ type: "[Cart] - Remove product in cart", payload: id });
   };
 
-  const createOrder = async (): Promise<{
+  const createOrder = async (formData: {
+    name: string;
+    lastName: string;
+    email: string;
+    address: string;
+    phone: string;
+  }): Promise<{
     hasError: boolean;
     message: string;
   }> => {
+    const token = Cookie.get("token");
+    const data = {
+      orderItems: state.cart,
+      total: state.total,
+      shippingAddress: formData,
+      numberOfItems: state.cart.length,
+    };
+
     try {
-      // const { data } = await deALGO;
-
-      const data: any = {};
-
+      const resp = await shopApi.post("/order", data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       dispatch({ type: "[Cart] - Order complete" });
 
       return {
         hasError: false,
-        message: data.id!,
+        message: resp.data.id!,
       };
     } catch (error) {
       return {
@@ -115,6 +140,8 @@ export const CartProvider: FC<Props> = ({ children }) => {
       };
     }
   };
+
+  const clearCart = () => dispatch({ type: "[Cart] - Order complete" });
 
   return (
     <CartContext.Provider
@@ -127,7 +154,6 @@ export const CartProvider: FC<Props> = ({ children }) => {
         updateCartQuantity,
         clearCart,
 
-        // Orders
         createOrder,
       }}
     >

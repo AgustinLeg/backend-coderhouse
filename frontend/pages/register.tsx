@@ -44,13 +44,15 @@ export default function Register() {
   const [error, setError] = useState(false);
   const router = useRouter();
 
+  const next = (router.query.next as string) || "/";
+
   const handleRegister = async (data: FormData) => {
     setError(false);
     const resp = await registerUser(data);
     if (!resp) {
       return setError(true);
     }
-    router.replace("/");
+    router.replace(next || "/");
   };
   return (
     <ShopLayout>
@@ -180,7 +182,10 @@ export default function Register() {
             <Stack pt={6}>
               <Text align={"center"}>
                 Ya tienes una cuenta?{" "}
-                <NextLink href="/login" passHref>
+                <NextLink
+                  href={`/login${next && `?next=%2F${next.slice(1)}`}`}
+                  passHref
+                >
                   <Link color={"blue.400"}>Iniciar Sesion</Link>
                 </NextLink>
               </Text>
