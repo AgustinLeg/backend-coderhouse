@@ -23,4 +23,7 @@ export const SID_TWILIO = process.env.SID_TWILIO
 export const SMS_ADMIN = process.env.SMS_ADMIN
 export const WP_ADMIN = process.env.WP_ADMIN
 
-export const whiteList = ['http://localhost:3000']
+export const whiteList = [
+  'http://localhost:3000',
+  'https://coderhouse-shop.vercel.app',
+]
