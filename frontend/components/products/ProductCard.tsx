@@ -38,7 +38,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
       <Box h="60%">
         <Image
           m="auto"
-          src={product.images[0]}
+          src={product.images}
           alt={`Picture of ${product.title}`}
           roundedTop="lg"
           h="full"

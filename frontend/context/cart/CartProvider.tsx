@@ -73,6 +73,8 @@ export const CartProvider: FC<Props> = ({ children }) => {
   const addProductToCart = (product: IProduct) => {
     // 1. Buscar el producto en el carrito
 
+    console.log(product);
+
     const productCart = { ...product, quantity: 1 } as any;
 
     const productInCart = state.cart.some((p) => p.id === product.id);
@@ -116,12 +118,15 @@ export const CartProvider: FC<Props> = ({ children }) => {
     message: string;
   }> => {
     const token = Cookie.get("token");
+    console.log(state.cart);
     const data = {
       orderItems: state.cart,
       total: state.total,
       shippingAddress: formData,
       numberOfItems: state.cart.length,
     };
+
+    console.log(data);
 
     try {
       const resp = await shopApi.post("/order", data, {

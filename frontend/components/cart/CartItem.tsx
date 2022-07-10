@@ -33,7 +33,7 @@ export const CartItem: FC<Props> = ({ product }) => {
         mb={2}
       >
         <Image
-          src={product.images[0]}
+          src={product.images}
           height="100px"
           alt={`Foto producto de ${product.title}`}
         />

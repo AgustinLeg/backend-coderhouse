@@ -20,6 +20,8 @@ export const useProducts = (
     config
   );
 
+  console.log(data);
+
   return {
     products: data || [],
     isLoading: !error && !data,
