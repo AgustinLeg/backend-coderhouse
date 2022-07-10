@@ -1,7 +1,10 @@
 import { User } from '../models/index.js'
 import bcrypt from 'bcrypt'
 import { isValidEmail, jwt } from '../utils/index.js'
-import { mailNuevoUsuario, logger } from '../services/index.js'
+import { logger } from '../services/index.js'
+
+import Users from '../services/DAO/user.services.js'
+const users = Users.initInstance()
 
 export const login = async (req, res) => {
   const { email, password } = req.body
@@ -43,31 +46,27 @@ export const register = async (req, res) => {
     return res.status(400).send({ error: 'Password invalido', status: 400 })
   }
 
-  const user = await User.findOne({ email })
-
-  if (user) {
-    return res.status(400).send({ error: 'Email ya existe', status: 400 })
-  }
-
-  const newUser = new User({
-    name,
-    lastName,
-    email,
-    password: bcrypt.hashSync(password, 10),
-    role: 'USER',
-  })
-
   try {
-    await newUser.save()
+    users.getByMail(email, (user) => {
+      if (user) {
+        return res.status(400).send({ error: 'Email ya existe', status: 400 })
+      }
+      const newUser = {
+        name,
+        lastName,
+        email,
+        password: bcrypt.hashSync(password, 10),
+        role: 'USER',
+      }
 
-    const { _id, email } = newUser
+      users.create(newUser, (resp) => {
+        const { token } = resp
 
-    const token = await jwt.signToken(_id, email)
-    await mailNuevoUsuario(newUser)
-
-    return res.json({
-      token,
-      user: newUser,
+        return res.json({
+          token,
+          user: newUser,
+        })
+      })
     })
   } catch (error) {
     logger.error(`Error al crear cuenta : ${error}`)
@@ -85,8 +84,9 @@ export const CheckUser = async (req, res) => {
         message: 'No tienes permiso',
       })
     }
-    const userDB = await User.findById(user._id)
-    return res.status(200).json(userDB)
+    users.getById(user._id, (userDB) => {
+      return res.status(200).json(userDB)
+    })
   } catch (error) {
     logger.error({ error })
     return res.status(500).json({

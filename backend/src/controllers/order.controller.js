@@ -1,13 +1,10 @@
-import { Product, Order } from '../models/index.js'
-
-// import { jwt } from '../utils/index.js'
 import jwt from 'jsonwebtoken'
-import {
-  logger,
-  mailNuevaVenta,
-  smsNuevaVenta,
-  wpNuevaVenta,
-} from '../services/index.js'
+import { logger } from '../services/index.js'
+
+import Orders from '../services/DAO/order.services.js'
+import Products from '../services/DAO/product.services.js'
+const orders = Orders.initInstance()
+const products = Products.initInstance()
 
 export const createOrder = async (req, res) => {
   const { orderItems, total } = req.body
@@ -20,35 +17,29 @@ export const createOrder = async (req, res) => {
     }
     const productsIds = orderItems.map((product) => product.id)
 
-    const dbProducts = await Product.find({ _id: { $in: productsIds } })
-    const backendTotal = orderItems.reduce((prev, current) => {
-      const currentPrice = dbProducts.find(
-        (prod) => prod.id === current.id
-      )?.price
-      if (!currentPrice) {
-        throw new Error('Verifique el carrito de nuevo, producto no existe')
+    products.getById(productsIds, (products) => {
+      const backendTotal = orderItems.reduce((prev, current) => {
+        const currentPrice = products.find(
+          (prod) => prod.id === current.id
+        )?.price
+        if (!currentPrice) {
+          throw new Error('Verifique el carrito de nuevo, producto no existe')
+        }
+
+        return currentPrice * current.quantity + prev
+      }, 0)
+
+      if (total !== backendTotal) {
+        throw new Error('El total no cuadra con el monto')
       }
 
-      return currentPrice * current.quantity + prev
-    }, 0)
+      // Todo bien hasta este punto
+      orders.create({ ...req.body, isPaid: false, user: user._id }, (order) => {
+        order.total = Math.round(order.total * 100) / 100
 
-    if (total !== backendTotal) {
-      throw new Error('El total no cuadra con el monto')
-    }
-
-    // Todo bien hasta este punto
-    const newOrder = new Order({ ...req.body, isPaid: false, user: user._id })
-    newOrder.total = Math.round(newOrder.total * 100) / 100
-
-    console.log(newOrder)
-
-    await newOrder.save()
-
-    await mailNuevaVenta(newOrder)
-    await wpNuevaVenta(newOrder)
-    await smsNuevaVenta(newOrder)
-
-    return res.status(201).json(newOrder)
+        return res.status(201).json(order)
+      })
+    })
   } catch (error) {
     logger.error(error)
     return res.status(500).json({
