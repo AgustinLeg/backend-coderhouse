@@ -8,7 +8,12 @@ class Orders {
   }
 
   async create(order, res) {
-    order.id = await this.knex('ordenes').returning('id').insert(order)
+    const { shippingAddress, orderItems, ...newOrder } = order
+    order.id = await this.knex('orders').returning('id').insert(newOrder)[0]?.id
+    for await (const item of orderItems) {
+      await this.knex('order_items').insert(item)
+    }
+    await this.knex('shipping_address').insert(shippingAddress)
     await mailNuevaVenta(order)
     await wpNuevaVenta(order)
     await smsNuevaVenta(order)
@@ -16,22 +21,19 @@ class Orders {
   }
 
   async getById(id, resOrden) {
-    const order = await this.knex.select().from('ordenes').where('id', id)
+    const order = await this.knex.select().from('orders').where('id', id)
 
     resOrden(order)
   }
 
-  async getByEmail(email, resOrdenes) {
-    const orders = await this.knex
-      .select()
-      .from('ordenes')
-      .where('email', email)
+  async getByEmail(email, res) {
+    const orders = await this.knex.select().from('orders').where('email', email)
 
-    resOrdenes(orders)
+    res(orders)
   }
 
   async deleteById(id, res) {
-    await this.knex('ordenes').where('id', id).del()
+    await this.knex('orders').where('id', id).del()
     res(`Órden con ID ${id} Eliminada.`)
   }
 }

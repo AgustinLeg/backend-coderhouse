@@ -9,29 +9,29 @@ class Users {
 
   async create(user, res) {
     user.created_at = new Date()
-    user.id = null
-    user = await this.knex('usuarios').insert(user)
+    user.id = await this.knex('users').returning('id').insert(user)[0]?.id
     res(user)
   }
 
   async update(user, res) {
     user.updated_at = new Date()
-    await this.knex('usuarios').where('id', user.id).update(user)
-    res(user)
+    await this.knex('users').where('id', user.id).update(user)
+    res(user[0])
   }
 
   async getById(id, res) {
-    const user = await this.knex.select().from('usuarios').where('id', id)
-    res(user)
+    const user = await this.knex.select().from('users').where('id', id)
+    res(user[0])
   }
 
   async getByMail(email, res) {
-    const user = await knex.select().from('usuarios').where({ email })
-    res(user)
+    const user = await knex.select().from('users').where('email', email)
+    console.log(user[0])
+    res(user[0])
   }
 
   async delete(id, res) {
-    await this.knex('Usuarios').where('id', id).del()
+    await this.knex('users').where('id', id).del()
     res(`Usuario con ID ${id} Eliminado ¡¡¡¡`)
   }
 }

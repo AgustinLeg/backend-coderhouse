@@ -9,8 +9,10 @@ class Products {
 
   async create(product, res) {
     try {
-      product.id = await this.knex('productos').returning('id').insert(product)
-      res(product)
+      const productId = await this.knex('products')
+        .returning('id')
+        .insert(product)
+      res({ ...product, ...productId[0] })
     } catch (err) {
       console.log(err)
       res(err)
@@ -20,7 +22,7 @@ class Products {
   async update(product, res) {
     try {
       product.updated_at = new Date()
-      await this.knex('productos').where('id', product.id).update(product)
+      await this.knex('products').where('id', product.id).update(product)
       res(product)
     } catch (err) {
       res(err)
@@ -29,9 +31,14 @@ class Products {
 
   async getById(id, res) {
     try {
-      const prod = await this.knex.select().from('productos').where('id', id)
-      res(prod[0])
+      const products = await this.knex
+        .select()
+        .from('products')
+        .where((builder) => builder.whereIn('id', id))
+
+      res(products)
     } catch (err) {
+      console.log(err)
       res(err)
     }
   }
@@ -40,7 +47,7 @@ class Products {
     try {
       const prods = await this.knex
         .select()
-        .from('productos')
+        .from('products')
         .where('slug', slug)
       res(prods)
     } catch (err) {
@@ -50,8 +57,8 @@ class Products {
 
   async getAll(res) {
     try {
-      const prods = await this.knex.select().from('productos')
-      res({ productos: prods, random: this.random })
+      const prods = await this.knex.select().from('products')
+      res(prods)
     } catch (err) {
       res(err)
     }
@@ -59,7 +66,7 @@ class Products {
 
   async deleteById(id) {
     try {
-      await this.knex('productos').where('id', id).del()
+      await this.knex('products').where('id', id).del()
     } catch (err) {
       console.log(err)
     }

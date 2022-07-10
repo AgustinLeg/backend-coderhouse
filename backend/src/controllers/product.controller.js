@@ -30,7 +30,7 @@ export const newProduct = async (req, res) => {
   const newProduct = {
     title,
     price,
-    images: [thumbnail],
+    images: thumbnail,
     inStock: stock,
     slug,
     tags,

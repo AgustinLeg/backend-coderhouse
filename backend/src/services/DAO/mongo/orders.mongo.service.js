@@ -26,7 +26,7 @@ class Orders {
 
   async getById(id, res) {
     try {
-      const response = await OrdersModel.findById(id)
+      const response = await OrdersModel.find({ _id: id })
       res(response)
     } catch (err) {
       res(err)
