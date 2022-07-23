@@ -31,57 +31,79 @@ export const usuarioGet = async ({ email }) => {
 }
 
 export const createProducto = async ({ producto }) => {
-  const { description, title, images, price, stock, slug } = producto
+  const { description, title, image, price, inStock, slug } = producto
   const productoNuevo = {
     title,
     description,
-    images,
+    images: image,
     price,
     slug,
-    inStock: stock,
+    inStock,
+    tags: [''],
   }
   logger.info(`Post Productos/ Producto: ${JSON.stringify(productoNuevo)} `)
-  const produc = await prod.save(productoNuevo)
-  return ProductosDTO(produc)
+  let prod
+  await prod.create(productoNuevo, (data) => {
+    prod = data
+  })
+  console.log(prod)
+  return ProductosDTO(prod)
 }
 
-export const updateProducto = async ({ sku, producto }) => {
-  const { description, title, images, price, stock, slug } = producto
+export const updateProducto = async ({ slug, producto }) => {
+  const { description, title, image, price, inStock } = producto
   const productoNuevo = {
     title,
     description,
-    images,
+    images: image,
     price,
     slug,
-    inStock: stock,
+    inStock,
+    tags: '',
+    id: slug,
   }
   logger.info(`Put Productos/ Producto: ${JSON.stringify(productoNuevo)}`)
-  const produc = await prod.update(sku, productoNuevo)
-  return ProductosDTO(produc)
+  let prod
+  await prod.update(productoNuevo, (data) => {
+    prod = data
+  })
+  return ProductosDTO(prod)
 }
 
-export const deleteProducto = async ({ sku }) => {
-  logger.info(`Delete Productos/ Producto: ${sku}`)
-  const produc = await prod.deleteById(sku)
-  return produc
+export const deleteProducto = async ({ slug }) => {
+  logger.info(`Delete Productos/ Producto: ${slug}`)
+  let prod
+  await prod.deleteById(slug, (data) => {
+    prod = data
+  })
+  return prod
 }
 export const createUsuario = async ({ usuario }) => {
   const { name, lastName, email, password } = usuario
   const usuarioNuevo = { name, lastName, email, password, role: 'USER' }
   logger.info(`Post Usuarios/ Usuario: ${JSON.stringify(usuarioNuevo)} `)
-  const usuarioCreado = await usuarios.altaUsuario(usuarioNuevo)
+  let usuarioCreado
+  await usuarios.altaUsuario(usuarioNuevo, (data) => {
+    usuarioCreado = data
+  })
   return usuarioCreado
 }
 export const updateUsuario = async ({ email, usuario }) => {
   const { name, lastName, password } = usuario
   const usuarioNuevo = { name, lastName, password, email }
   logger.info(`Put Usuarios/ Usuario: ${JSON.stringify(usuarioNuevo)}`)
-  const usuarioModi = await usuarios.modiUsuario(usuarioNuevo)
+  let usuarioModi
+  await usuarios.modiUsuario(usuarioNuevo, (data) => {
+    usuarioModi = data
+  })
   return usuarioModi
 }
 
 export const deleteUsuario = async ({ email }) => {
   logger.info(`Delete Usuarios/ Usuario: ${email}`)
-  const usuario = await usuarios.deleteById(email)
+  let usuario
+  await usuarios.deleteById(email, (data) => {
+    usuario = data
+  })
   return usuario
 }

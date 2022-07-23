@@ -9,8 +9,6 @@ const schema = buildSchema(`
         images: String
         price: Int
         inStock: Int
-        created_at: String
-        updated_at: String
     }
     type Usuario {
         name: String
