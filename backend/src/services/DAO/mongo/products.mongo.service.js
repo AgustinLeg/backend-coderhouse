@@ -24,8 +24,12 @@ class Products {
 
   async update(product, res) {
     try {
-      const response = await Product.updateOne({ _id: product._id }, product)
-      res(response)
+      const response = await Product.updateOne(
+        { slug: product.id },
+        product
+      ).lean()
+      console.log(response)
+      res(product)
     } catch (err) {
       res(err)
     }
@@ -60,7 +64,7 @@ class Products {
 
   async deleteById(id, res) {
     try {
-      const response = await Product.findByIdAndDelete(id)
+      const response = await Product.findOneAndDelete({ slug: id })
       res(response)
     } catch (err) {
       res(err)
