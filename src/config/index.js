@@ -1,7 +1,7 @@
 import { config } from 'dotenv'
 config()
 
-export const PORT = parseInt(process.argv[2]) || process.env.PORT || 3001
+export const PORT = process.env.PORT || parseInt(process.argv[2]) || 3001
 
 // database environment variables
 export const MONGO_URI = process.env.MONGO_URI || 'localhost'
@@ -26,5 +26,5 @@ export const WP_ADMIN = process.env.WP_ADMIN
 export const whiteList = [
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://coderhouse-shop.vercel.app',
+  'https://coderhouse-react-flamakeys.vercel.app',
 ]
