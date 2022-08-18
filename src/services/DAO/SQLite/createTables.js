@@ -66,5 +66,14 @@ const knex = knex1(config)
     table.string('updated_at')
   })
 
+  await knex.schema.dropTableIfExists('messages')
+  await knex.schema.createTable('messages', (table) => {
+    table.increments()
+    table.string('email')
+    table.string('uid')
+    table.string('message')
+    table.datetime('createdAt')
+  })
+
   logger.info('TABLAS CREADAS CON ÉXITO.')
 })()

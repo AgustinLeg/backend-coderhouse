@@ -1,4 +1,4 @@
-import Products from '../services/DAO/product.services.js'
+import Products from '../services/DAO/product.service.js'
 
 const prod = Products.initInstance()
 
@@ -8,9 +8,9 @@ export const getAll = async (_req, res) => {
   })
 }
 
-export const getBySlug = async (req, res) => {
-  const slug = req.params.slug
-  prod.getBySlug(slug, (p) => {
+export const getById = async (req, res) => {
+  const id = req.params.id
+  prod.getById(id, (p) => {
     res.status(200).json(p)
   })
 }
@@ -30,7 +30,7 @@ export const newProduct = async (req, res) => {
   const newProduct = {
     title,
     price,
-    images: thumbnail,
+    image: thumbnail,
     inStock: stock,
     slug,
     tags,
@@ -44,8 +44,6 @@ export const newProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   const id = req.params.id
-  console.log(id)
-
   prod.update({ id, ...req.body }, (product) => {
     res.status(200).json(product)
   })

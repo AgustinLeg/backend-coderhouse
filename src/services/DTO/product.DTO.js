@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const productosDTO = (producto) => {
+const productosDTO = (product) => {
   const {
     title,
     description,
@@ -9,9 +9,9 @@ const productosDTO = (producto) => {
     slug,
     created_at,
     updated_at,
-  } = producto
+  } = product
   return {
-    id: producto.id || producto._id,
+    id: product.id || product._id,
     title: title || '',
     description: description || '',
     images: images || '',

@@ -4,11 +4,8 @@ import { verifyToken } from '../middlewares/auth.middleware.js'
 
 export const AuthRouter = Router()
 
-AuthRouter.post('/user', verifyToken, Auth.CheckUser)
+AuthRouter.get('/user', verifyToken, Auth.CheckUser)
 
 AuthRouter.post('/login', Auth.login)
 
 AuthRouter.post('/register', Auth.register)
-
-// todo: renew token
-// AuthRouter.post('/renew', Auth.renewToken)

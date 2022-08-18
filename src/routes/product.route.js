@@ -9,7 +9,7 @@ export const ProductRouter = Router()
 ProductRouter.get('/', Product.getAll)
 
 // Producto por ID
-ProductRouter.get('/:slug', Product.getBySlug)
+ProductRouter.get('/:id', Product.getById)
 
 // Crear producto
 ProductRouter.post('/', Product.newProduct)

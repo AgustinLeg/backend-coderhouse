@@ -24,8 +24,8 @@ class Products {
 
   async update(product, res) {
     try {
-      const response = await Product.updateOne(
-        { slug: product.id },
+      const response = await Product.findByIdAndUpdate(
+        product.id,
         product
       ).lean()
       console.log(response)
@@ -37,8 +37,8 @@ class Products {
 
   async getById(id, res) {
     try {
-      const response = await Product.find({ _id: id })
-      res(response)
+      const response = await Product.findById(id)
+      res({ ...response.toJSON() })
     } catch (err) {
       res(err)
     }

@@ -1,7 +1,7 @@
-import ProductosDTO from './DTO/product.DTO.js'
+import ProductosDTO from './DTO/product.dto.js'
 import logger from './logger.services.js'
-import Productos from './DAO/product.services.js'
-import Usuarios from './DAO/user.services.js'
+import Productos from './DAO/product.service.js'
+import Usuarios from './DAO/user.service.js'
 
 const prod = Productos.initInstance()
 const usuarios = Usuarios.initInstance()

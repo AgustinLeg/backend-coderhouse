@@ -14,9 +14,9 @@ class Orders {
     try {
       const orderDB = await OrdersModel.create(order)
       await orderDB.save()
-      await mailNuevaVenta(order)
-      await wpNuevaVenta(order)
-      await smsNuevaVenta(order)
+      await mailNuevaVenta(orderDB)
+      await wpNuevaVenta(orderDB)
+      await smsNuevaVenta(orderDB)
       res(orderDB)
     } catch (err) {
       console.log('ERRORRRRRRRR ', err)
@@ -33,9 +33,9 @@ class Orders {
     }
   }
 
-  async getByEmail(email, res) {
+  async getByEmail(id, res) {
     try {
-      const response = await OrdersModel.findOne({ 'user.email': email })
+      const response = await OrdersModel.find({ user: id })
       res(response)
     } catch (err) {
       res(err)

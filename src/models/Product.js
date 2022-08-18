@@ -4,7 +4,7 @@ const { Schema, model } = pkg
 const ProductSchema = Schema(
   {
     description: { type: String, default: '' },
-    images: [{ type: String }],
+    image: { type: String },
     inStock: { type: Number, required: true, default: 0 },
     price: { type: Number, required: true, default: 0 },
     slug: { type: String, required: true, unique: true },

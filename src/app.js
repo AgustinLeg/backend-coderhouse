@@ -1,4 +1,6 @@
 import express from 'express'
+import { Server } from 'socket.io'
+import { createServer } from 'http'
 import path from 'path'
 import cors from 'cors'
 import compression from 'compression'
@@ -14,6 +16,7 @@ import {
 
 import { PORT, whiteList } from './config/index.js'
 import { logger } from './services/index.js'
+import { SocketController } from './controllers/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -31,28 +34,8 @@ app.use(
   express.static(path.join(__dirname, '../public'), { maxAge: 31557600000 })
 )
 
-app.get('/suma', (req, res) => {
-  const { n1 = '', n2 = '' } = req.query
-
-  if (!parseInt(n1) || !parseInt(n2)) {
-    // logger.debug('n1 o n2 no son numeros')
-
-    // logger.error('n1 o n2 no son numeros')
-
-    res.status(400).send('n1 o n2 no son numeros')
-    return
-  }
-  const result = parseInt(n1) + parseInt(n2)
-
-  // logger.info(`suma de ${n1} + ${n2} = ${result}`)
-
-  res.send(`${result}`)
-})
-
 // compression
 app.use(compression())
-
-app.on('error', (err) => logger.error(err))
 
 // API endpoints
 app.get('/', (_req, res) => {
@@ -65,9 +48,30 @@ app.use('/api/info', InfoRouter)
 app.use('/api/randoms', RandomRouter)
 app.use('/api/graphql', GraphqlRouter)
 
+// api not found
 app.use('*', (req, res) => {
-  logger.warn(`${req.method}  - ${req.originalUrl} - INEXISTENTE.`)
-  res.status(400).json({ descripcion: `Ruta ${req.originalUrl} Inexistente.` })
+  logger.warn(`${req.method}  - ${req.originalUrl} - Not found.`)
+  res.status(400).json({ message: `Bad request` })
 })
 
-export default app
+// Error handler
+app.on('error', (error) => {
+  logger.error(error)
+})
+
+// Create http server
+const httpServer = createServer(app)
+
+// Create Socket connection
+const io = new Server(httpServer, {
+  cors: {
+    origin: whiteList,
+  },
+})
+
+// Socket controller
+io.on('connection', (socket) => {
+  SocketController(socket, io)
+})
+
+export { app, httpServer }

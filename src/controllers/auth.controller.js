@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import { isValidEmail, jwt } from '../utils/index.js'
 import { logger } from '../services/index.js'
 
-import Users from '../services/DAO/user.services.js'
+import Users from '../services/DAO/user.service.js'
 const users = Users.initInstance()
 
 export const login = async (req, res) => {
