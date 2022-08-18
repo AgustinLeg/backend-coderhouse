@@ -46,7 +46,6 @@ export const createProducto = async ({ producto }) => {
   await prod.create(productoNuevo, (data) => {
     prod = data
   })
-  console.log(prod)
   return ProductosDTO(prod)
 }
 
