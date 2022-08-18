@@ -11,7 +11,7 @@ import {
   InfoRouter,
   RandomRouter,
   OrderRouter,
-  GraphqlRouter,
+  // GraphqlRouter,
 } from './routes/index.js'
 
 import { PORT, whiteList } from './config/index.js'
@@ -46,7 +46,7 @@ app.use('/api/auth', AuthRouter)
 app.use('/api/order', OrderRouter)
 app.use('/api/info', InfoRouter)
 app.use('/api/randoms', RandomRouter)
-app.use('/api/graphql', GraphqlRouter)
+// app.use('/api/graphql', GraphqlRouter)
 
 // api not found
 app.use('*', (req, res) => {
