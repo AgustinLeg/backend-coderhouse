@@ -1,4 +1,4 @@
-import ProductosDTO from './DTO/product.dto.js'
+import productosDTO from './DTO/product.dto.js'
 import logger from './logger.services.js'
 import Productos from './DAO/product.service.js'
 import Usuarios from './DAO/user.service.js'
@@ -46,7 +46,7 @@ export const createProducto = async ({ producto }) => {
   await prod.create(productoNuevo, (data) => {
     prod = data
   })
-  return ProductosDTO(prod)
+  return productosDTO(prod)
 }
 
 export const updateProducto = async ({ slug, producto }) => {
@@ -66,7 +66,7 @@ export const updateProducto = async ({ slug, producto }) => {
   await prod.update(productoNuevo, (data) => {
     prod = data
   })
-  return ProductosDTO(prod)
+  return productosDTO(prod)
 }
 
 export const deleteProducto = async ({ slug }) => {
