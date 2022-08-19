@@ -5,8 +5,7 @@ import { logger } from './services/index.js'
 /**
  * Start Express server.
  */
-logger.info(process.argv)
-const Server = httpServer.listen(app.get('port'), async () => {
+const Server = httpServer.listen(process.env.PORT, async () => {
   // connect to database
   try {
     await DB.connect()
