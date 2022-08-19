@@ -2,7 +2,6 @@
   "name": "express-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon --inspect ./src/server.js --port 8080  --db mongo",
