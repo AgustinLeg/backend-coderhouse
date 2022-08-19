@@ -3,3 +3,5 @@
 *.log
 /mongo
 logs/
+
+/backend
