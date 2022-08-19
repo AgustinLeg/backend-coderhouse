@@ -5,7 +5,7 @@ import { logger } from './services/index.js'
 /**
  * Start Express server.
  */
-const Server = httpServer.listen(+app.get('port'), async () => {
+const Server = httpServer.listen(app.get('port'), async () => {
   // connect to database
   try {
     await DB.connect()
@@ -16,7 +16,7 @@ const Server = httpServer.listen(+app.get('port'), async () => {
   logger.info(
     `🚀 Server started on http://localhost:${app.get('port')} in ${app.get(
       'env'
-    )}mode`
+    )} mode`
   )
   logger.info('  Press CTRL-C to stop\n')
 })
