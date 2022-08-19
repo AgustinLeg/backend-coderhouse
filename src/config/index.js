@@ -26,5 +26,5 @@ export const WP_ADMIN = process.env.WP_ADMIN
 export const whiteList = [
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://coderhouse-react-flamakeys.vercel.app',
+  'https://thunderous-pony-352ae8.netlify.app',
 ]
